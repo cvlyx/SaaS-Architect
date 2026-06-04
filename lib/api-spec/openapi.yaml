@@ -3,20 +3,32 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Organization OS API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: organizations
+    description: Organization management
+  - name: users
+    description: User management
+  - name: industry-packs
+    description: Industry pack management
+  - name: subscription
+    description: Subscription and billing
+  - name: dashboard
+    description: Dashboard and analytics
+  - name: modules
+    description: Module management
+
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,13 +36,701 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  # ── Organizations ─────────────────────────────────────────────
+  /organizations:
+    get:
+      operationId: listOrganizations
+      tags: [organizations]
+      summary: List all organizations
+      responses:
+        "200":
+          description: Organizations list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Organization"
+    post:
+      operationId: createOrganization
+      tags: [organizations]
+      summary: Create a new organization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OrganizationInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Organization"
+
+  /organizations/{id}:
+    get:
+      operationId: getOrganization
+      tags: [organizations]
+      summary: Get organization by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Organization
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Organization"
+    patch:
+      operationId: updateOrganization
+      tags: [organizations]
+      summary: Update organization
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OrganizationUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Organization"
+
+  /organizations/{id}/stats:
+    get:
+      operationId: getOrganizationStats
+      tags: [organizations]
+      summary: Get dashboard stats for an organization
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrganizationStats"
+
+  # ── Industry Packs ─────────────────────────────────────────────
+  /industry-packs:
+    get:
+      operationId: listIndustryPacks
+      tags: [industry-packs]
+      summary: List all available industry packs
+      responses:
+        "200":
+          description: Industry packs list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/IndustryPack"
+
+  /industry-packs/{id}:
+    get:
+      operationId: getIndustryPack
+      tags: [industry-packs]
+      summary: Get industry pack details
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Industry pack
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IndustryPack"
+
+  # ── Users ─────────────────────────────────────────────────────
+  /users:
+    get:
+      operationId: listUsers
+      tags: [users]
+      summary: List users
+      parameters:
+        - name: organizationId
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Users list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+    post:
+      operationId: createUser
+      tags: [users]
+      summary: Create a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+
+  /users/{id}:
+    get:
+      operationId: getUser
+      tags: [users]
+      summary: Get user by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: User
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+    patch:
+      operationId: updateUser
+      tags: [users]
+      summary: Update user
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+    delete:
+      operationId: deleteUser
+      tags: [users]
+      summary: Delete user
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # ── Subscription ──────────────────────────────────────────────
+  /subscriptions:
+    get:
+      operationId: listSubscriptions
+      tags: [subscription]
+      summary: List all subscription plans
+      responses:
+        "200":
+          description: Plans
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SubscriptionPlan"
+
+  /subscriptions/current:
+    get:
+      operationId: getCurrentSubscription
+      tags: [subscription]
+      summary: Get current organization subscription
+      parameters:
+        - name: organizationId
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Current subscription
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Subscription"
+
+  /subscriptions/history:
+    get:
+      operationId: getPaymentHistory
+      tags: [subscription]
+      summary: Get payment history
+      parameters:
+        - name: organizationId
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Payment history
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PaymentRecord"
+
+  # ── Dashboard ─────────────────────────────────────────────────
+  /dashboard/summary:
+    get:
+      operationId: getPlatformSummary
+      tags: [dashboard]
+      summary: Get platform-wide summary stats
+      responses:
+        "200":
+          description: Platform summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlatformSummary"
+
+  /dashboard/activity:
+    get:
+      operationId: getRecentActivity
+      tags: [dashboard]
+      summary: Get recent activity feed
+      responses:
+        "200":
+          description: Activity feed
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ActivityItem"
+
+  /dashboard/industry-breakdown:
+    get:
+      operationId: getIndustryBreakdown
+      tags: [dashboard]
+      summary: Get organization count broken down by industry
+      responses:
+        "200":
+          description: Industry breakdown
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/IndustryBreakdownItem"
+
+  /dashboard/growth:
+    get:
+      operationId: getGrowthMetrics
+      tags: [dashboard]
+      summary: Get monthly growth metrics
+      responses:
+        "200":
+          description: Growth metrics
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/GrowthMetric"
+
+  # ── Modules ───────────────────────────────────────────────────
+  /modules:
+    get:
+      operationId: listModules
+      tags: [modules]
+      summary: List all available modules
+      responses:
+        "200":
+          description: Modules
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Module"
+
+  /modules/organization/{orgId}:
+    get:
+      operationId: getOrganizationModules
+      tags: [modules]
+      summary: Get modules enabled for an organization
+      parameters:
+        - name: orgId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Org modules
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Module"
+
 components:
   schemas:
     HealthStatus:
       type: object
+      required: [status]
       properties:
         status:
           type: string
-      required:
-        - status
 
+    # Organization
+    Organization:
+      type: object
+      required: [id, name, type, country, city, size, industryPackId, status, trialEndsAt, createdAt]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        type:
+          type: string
+        country:
+          type: string
+        city:
+          type: string
+        size:
+          type: string
+        industryPackId:
+          type: integer
+        logoUrl:
+          type: ["string", "null"]
+        website:
+          type: ["string", "null"]
+        status:
+          type: string
+          enum: [trial, active, suspended, expired]
+        trialEndsAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+
+    OrganizationInput:
+      type: object
+      required: [name, type, country, city, size, industryPackId]
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        country:
+          type: string
+        city:
+          type: string
+        size:
+          type: string
+        industryPackId:
+          type: integer
+        logoUrl:
+          type: string
+        website:
+          type: string
+
+    OrganizationUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        city:
+          type: string
+        size:
+          type: string
+        logoUrl:
+          type: string
+        website:
+          type: string
+        status:
+          type: string
+
+    OrganizationStats:
+      type: object
+      required: [totalUsers, activeModules, storageUsedMb, lastActivityAt]
+      properties:
+        totalUsers:
+          type: integer
+        activeModules:
+          type: integer
+        storageUsedMb:
+          type: number
+        lastActivityAt:
+          type: string
+          format: date-time
+
+    # Industry Packs
+    IndustryPack:
+      type: object
+      required: [id, name, slug, description, features, roles, icon, color]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        slug:
+          type: string
+        description:
+          type: string
+        features:
+          type: array
+          items:
+            type: string
+        roles:
+          type: array
+          items:
+            type: string
+        icon:
+          type: string
+        color:
+          type: string
+
+    # Users
+    User:
+      type: object
+      required: [id, fullName, email, role, organizationId, status, createdAt]
+      properties:
+        id:
+          type: integer
+        fullName:
+          type: string
+        email:
+          type: string
+        phone:
+          type: ["string", "null"]
+        role:
+          type: string
+        organizationId:
+          type: integer
+        status:
+          type: string
+          enum: [active, inactive, pending]
+        avatarUrl:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+          format: date-time
+
+    UserInput:
+      type: object
+      required: [fullName, email, role, organizationId]
+      properties:
+        fullName:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        role:
+          type: string
+        organizationId:
+          type: integer
+        password:
+          type: string
+
+    UserUpdate:
+      type: object
+      properties:
+        fullName:
+          type: string
+        phone:
+          type: string
+        role:
+          type: string
+        status:
+          type: string
+        avatarUrl:
+          type: string
+
+    # Subscription
+    SubscriptionPlan:
+      type: object
+      required: [id, name, description, priceMonthly, priceYearly, maxUsers, features]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        priceMonthly:
+          type: number
+        priceYearly:
+          type: number
+        maxUsers:
+          type: integer
+        features:
+          type: array
+          items:
+            type: string
+        isPopular:
+          type: boolean
+
+    Subscription:
+      type: object
+      required: [id, organizationId, planId, planName, status, currentPeriodStart, currentPeriodEnd]
+      properties:
+        id:
+          type: integer
+        organizationId:
+          type: integer
+        planId:
+          type: integer
+        planName:
+          type: string
+        status:
+          type: string
+          enum: [trial, active, cancelled, expired]
+        currentPeriodStart:
+          type: string
+          format: date-time
+        currentPeriodEnd:
+          type: string
+          format: date-time
+        daysRemaining:
+          type: integer
+
+    PaymentRecord:
+      type: object
+      required: [id, organizationId, amount, currency, status, description, paidAt]
+      properties:
+        id:
+          type: integer
+        organizationId:
+          type: integer
+        amount:
+          type: number
+        currency:
+          type: string
+        status:
+          type: string
+          enum: [paid, pending, failed]
+        description:
+          type: string
+        invoiceUrl:
+          type: ["string", "null"]
+        paidAt:
+          type: string
+          format: date-time
+
+    # Dashboard/Analytics
+    PlatformSummary:
+      type: object
+      required: [totalOrganizations, activeOrganizations, totalUsers, monthlyRevenue, trialOrganizations, churnRate]
+      properties:
+        totalOrganizations:
+          type: integer
+        activeOrganizations:
+          type: integer
+        totalUsers:
+          type: integer
+        monthlyRevenue:
+          type: number
+        trialOrganizations:
+          type: integer
+        churnRate:
+          type: number
+
+    ActivityItem:
+      type: object
+      required: [id, type, description, organizationName, timestamp]
+      properties:
+        id:
+          type: integer
+        type:
+          type: string
+          enum: [signup, subscription, upgrade, downgrade, cancellation]
+        description:
+          type: string
+        organizationName:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+
+    IndustryBreakdownItem:
+      type: object
+      required: [industry, count, percentage]
+      properties:
+        industry:
+          type: string
+        count:
+          type: integer
+        percentage:
+          type: number
+
+    GrowthMetric:
+      type: object
+      required: [month, newOrganizations, revenue, activeUsers]
+      properties:
+        month:
+          type: string
+        newOrganizations:
+          type: integer
+        revenue:
+          type: number
+        activeUsers:
+          type: integer
+
+    # Modules
+    Module:
+      type: object
+      required: [id, name, description, category, icon]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+        icon:
+          type: string
+        priceMonthly:
+          type: ["number", "null"]

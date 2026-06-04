@@ -1,0 +1,593 @@
+You are a world-class SaaS architect, product designer, systems analyst, UX designer, database architect, and enterprise software engineer.
+
+Your task is to design a complete software platform called:
+
+ORGANIZATION OS (Temporary Name)
+
+PROJECT OVERVIEW
+
+Organization OS is a cloud-based multi-tenant SaaS platform that allows any organization to create and manage its own digital workspace.
+
+The platform serves multiple industries from a single system architecture.
+
+Unlike traditional software that only serves one industry, Organization OS allows organizations to select an Industry Pack during setup and instantly receive a specialized dashboard, workflows, modules, reports, permissions, and tools designed for that specific industry.
+
+Every organization operates independently within its own secure workspace while sharing the same platform infrastructure.
+
+The platform should be scalable enough to serve thousands of organizations across Malawi and eventually Africa.
+
+DESIGN GOALS
+
+1. One platform serving many industries.
+2. Industry-specific dashboards.
+3. Modular architecture.
+4. Subscription-based SaaS.
+5. Multi-tenant architecture.
+6. Mobile-first design.
+7. Modern enterprise UI.
+8. AI-ready architecture.
+9. Easy onboarding.
+10. Highly scalable infrastructure.
+
+====================================================
+PUBLIC WEBSITE
+
+Design a complete public-facing website including:
+
+HOME PAGE
+
+- Hero section
+- Platform overview
+- Industry packs section
+- Features section
+- Pricing section
+- Testimonials
+- FAQ
+- Contact section
+- Footer
+
+ABOUT PAGE
+
+- Company story
+- Vision
+- Mission
+- Team
+
+PRICING PAGE
+
+- Free Trial
+- Subscription Plans
+- Module Pricing
+- Enterprise Pricing
+
+FEATURES PAGE
+
+INDUSTRIES PAGE
+
+CONTACT PAGE
+
+BLOG PAGE
+
+LOGIN PAGE
+
+REGISTER PAGE
+
+PRIVACY POLICY PAGE
+
+TERMS AND CONDITIONS PAGE
+
+COOKIE POLICY PAGE
+
+SUPPORT PAGE
+
+====================================================
+REGISTRATION FLOW
+
+Step 1
+
+Create Account
+
+Fields:
+
+- Full Name
+- Email Address
+- Phone Number
+- Password
+- Confirm Password
+
+Step 2
+
+Create Organization
+
+Fields:
+
+- Organization Name
+- Organization Type
+- Country
+- City
+- Organization Size
+- Logo Upload
+- Website (Optional)
+
+Organization Types:
+
+- Education
+- Agriculture
+- Healthcare
+- NGO
+- Church
+- Corporate
+- Retail
+- Hotel
+- Transport
+- Real Estate
+- Manufacturing
+- Government
+- Finance
+- Sports
+- Association
+- Other
+
+Step 3
+
+Select Industry Pack
+
+Display all available packs.
+
+Step 4
+
+Select Modules
+
+Users can choose optional modules.
+
+Step 5
+
+Start Free Trial
+
+Free Trial Duration:
+
+7 Days
+
+Display Trial Counter.
+
+Step 6
+
+Generate Workspace
+
+Automatically create the organization's workspace.
+
+====================================================
+SUBSCRIPTION SYSTEM
+
+Users receive a 7-day free trial.
+
+After trial expiration:
+
+- Workspace becomes read-only.
+- Data remains safe.
+- User must subscribe to continue.
+
+Include:
+
+- Billing Dashboard
+- Subscription Management
+- Payment History
+- Invoices
+- Plan Upgrades
+- Plan Downgrades
+
+====================================================
+CORE PLATFORM
+
+Every organization receives:
+
+- User Management
+- Authentication
+- Role Management
+- Permissions
+- Dashboard Engine
+- Reporting Engine
+- Notifications
+- Activity Logs
+- File Storage
+- Search System
+- Billing System
+- Settings
+- Audit Trails
+
+====================================================
+INDUSTRY PACKS
+
+EDUCATION PACK
+
+Features:
+
+- Student Management
+- Teacher Management
+- Departments
+- Classes
+- Subjects
+- Timetables
+- Attendance
+- Exams
+- Results
+- Fees
+- Invoices
+- Library
+- Hostel
+- Parent Portal
+- Student Portal
+
+Roles:
+
+- Principal
+- Teacher
+- Accountant
+- Student
+- Parent
+
+---
+
+AGRICULTURE PACK
+
+Features:
+
+- Livestock Management
+- Crop Management
+- Harvest Tracking
+- Feed Tracking
+- Vaccination Records
+- Farm Equipment
+- Inventory
+- Sales
+- Financial Reports
+- Employee Management
+
+Roles:
+
+- Owner
+- Farm Manager
+- Worker
+- Veterinarian
+
+---
+
+HEALTHCARE PACK
+
+Features:
+
+- Patients
+- Doctors
+- Appointments
+- Laboratory
+- Pharmacy
+- Prescriptions
+- Billing
+- Wards
+- Medical Records
+
+Roles:
+
+- Admin
+- Doctor
+- Nurse
+- Receptionist
+- Pharmacist
+
+---
+
+NGO PACK
+
+Features:
+
+- Projects
+- Beneficiaries
+- Donors
+- Grants
+- Funding
+- Monitoring
+- Evaluation
+- Impact Reports
+
+Roles:
+
+- Director
+- Project Manager
+- Finance Officer
+- Field Officer
+
+---
+
+CHURCH PACK
+
+Features:
+
+- Members
+- Tithes
+- Offerings
+- Donations
+- Events
+- Ministries
+- Cell Groups
+- Attendance
+- Financial Reports
+
+Roles:
+
+- Pastor
+- Elder
+- Treasurer
+- Member
+
+---
+
+CORPORATE PACK
+
+Features:
+
+- HR
+- Payroll
+- Leave Management
+- Asset Management
+- Help Desk
+- Project Management
+- Documents
+- Meetings
+
+Roles:
+
+- CEO
+- Manager
+- HR
+- Employee
+
+---
+
+RETAIL & POS PACK
+
+Features:
+
+- Point of Sale
+- Inventory
+- Stock Control
+- Suppliers
+- Purchases
+- Sales
+- Customers
+- Receipts
+- Branch Management
+
+Roles:
+
+- Owner
+- Manager
+- Cashier
+- Store Clerk
+
+---
+
+HOTEL PACK
+
+Features:
+
+- Rooms
+- Reservations
+- Guests
+- Housekeeping
+- Restaurant Billing
+- Check-In
+- Check-Out
+
+Roles:
+
+- Manager
+- Receptionist
+- Housekeeper
+
+---
+
+TRANSPORT PACK
+
+Features:
+
+- Vehicles
+- Drivers
+- Fuel
+- Trips
+- Maintenance
+- Revenue Tracking
+
+---
+
+REAL ESTATE PACK
+
+Features:
+
+- Properties
+- Tenants
+- Rent Collection
+- Maintenance
+- Lease Agreements
+
+---
+
+MANUFACTURING PACK
+
+Features:
+
+- Production
+- Machinery
+- Inventory
+- Raw Materials
+- Orders
+- Quality Control
+
+---
+
+GOVERNMENT PACK
+
+Features:
+
+- Citizens
+- Licenses
+- Permits
+- Revenue Collection
+- Complaints
+- Inspections
+
+---
+
+FINANCE PACK
+
+Features:
+
+- Members
+- Savings
+- Loans
+- Repayments
+- Interest
+- Financial Reports
+
+---
+
+SPORTS PACK
+
+Features:
+
+- Teams
+- Players
+- Fixtures
+- Training
+- Statistics
+
+---
+
+ASSOCIATION PACK
+
+Features:
+
+- Membership
+- Committees
+- Elections
+- Events
+- Membership Fees
+
+====================================================
+CUSTOM PACK
+
+Custom Pack does not use AI-generated workspaces.
+
+Instead:
+
+Users submit a custom solution request.
+
+Fields:
+
+- Organization Name
+- Industry
+- Description of Operations
+- Number of Users
+- Desired Features
+- Budget Range
+- Timeline
+
+The request is reviewed by the platform administrators.
+
+Administrators can:
+
+- Approve Request
+- Reject Request
+- Request More Information
+- Create Custom Proposal
+- Estimate Development Cost
+- Create Custom Workspace
+
+Custom development should become a major revenue stream.
+
+====================================================
+DASHBOARD SYSTEM
+
+Each industry pack must have:
+
+- Unique Dashboard
+- Industry-specific KPIs
+- Industry-specific Reports
+- Industry-specific Navigation
+
+Examples:
+
+Education Dashboard:
+
+- Total Students
+- Total Teachers
+- Fee Collections
+- Attendance
+
+Agriculture Dashboard:
+
+- Livestock Count
+- Harvest Yield
+- Revenue
+- Expenses
+
+Healthcare Dashboard:
+
+- Patients
+- Appointments
+- Revenue
+- Admissions
+
+====================================================
+ADMINISTRATION PANEL
+
+Platform Super Admin Features:
+
+- Manage Organizations
+- Manage Users
+- Manage Packs
+- Manage Modules
+- Manage Billing
+- Manage Subscriptions
+- View Analytics
+- Manage Support Tickets
+- Manage Custom Requests
+- Manage System Settings
+
+====================================================
+DESIGN REQUIREMENTS
+
+Modern SaaS Design
+
+Use:
+
+- Professional Dashboard Layout
+- Sidebar Navigation
+- Responsive Design
+- Dark Mode
+- Light Mode
+- Mobile Friendly UI
+
+====================================================
+DELIVERABLES REQUIRED
+
+Generate:
+
+1. Full System Architecture
+2. Database Design
+3. ERD Diagrams
+4. Complete UI Structure
+5. User Flows
+6. Page Flows
+7. Role Permission Matrix
+8. API Architecture
+9. Multi-Tenant Architecture
+10. Security Architecture
+11. Development Roadmap
+12. MVP Plan
+13. Scaling Plan
+14. Mobile App Plan
+15. Revenue Model
+16. Technical Stack Recommendations
+17. Complete Software Requirements Specification (SRS)
+
+The final output should be detailed enough that a development team can immediately begin designing and building the platform.
