@@ -10,7 +10,7 @@ COPY lib/api-client-react/package.json lib/api-client-react/package.json
 COPY artifacts/api-server/package.json artifacts/api-server/package.json
 
 # Install dependencies
-RUN pnpm install --frozen-lockfile
+RUN pnpm install
 
 # Copy source files
 COPY lib/db lib/db
