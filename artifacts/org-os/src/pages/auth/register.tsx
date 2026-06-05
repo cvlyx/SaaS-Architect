@@ -14,6 +14,21 @@ import { CheckCircle2, LayoutDashboard, ArrowLeft, ArrowRight, ChevronRight, Loa
 import { useTheme } from "@/lib/theme-provider";
 import { motion } from "framer-motion";
 
+const FALLBACK_PACKS: IndustryPack[] = [
+  { id: 1, name: "Healthcare", slug: "healthcare", description: "HIPAA-compliant tools for medical practices", features: ["Patient records", "Appointment scheduling", "Billing"], roles: ["doctor", "nurse", "admin", "receptionist"], icon: "HeartPulse", color: "#ef4444" },
+  { id: 2, name: "Construction", slug: "construction", description: "Project management for contractors and builders", features: ["Blueprint markup", "Site inspections", "Material tracking"], roles: ["project_manager", "supervisor", "worker", "engineer"], icon: "HardHat", color: "#f59e0b" },
+  { id: 3, name: "Retail", slug: "retail", description: "POS and inventory management for stores", features: ["POS system", "Inventory tracking", "Supplier management"], roles: ["manager", "cashier", "stock_clerk"], icon: "ShoppingCart", color: "#22c55e" },
+  { id: 4, name: "Education", slug: "education", description: "LMS and student management for institutions", features: ["Course management", "Gradebook", "Student portal"], roles: ["teacher", "student", "admin", "parent"], icon: "GraduationCap", color: "#3b82f6" },
+  { id: 5, name: "Technology", slug: "technology", description: "Agile tools for software teams", features: ["Sprint planning", "Code review", "Issue tracking"], roles: ["developer", "team_lead", "product_owner", "scrum_master"], icon: "Monitor", color: "#8b5cf6" },
+  { id: 6, name: "Finance", slug: "finance", description: "Compliance and reporting for financial services", features: ["Audit trails", "Financial reporting", "Risk assessment"], roles: ["analyst", "compliance_officer", "manager", "advisor"], icon: "Landmark", color: "#06b6d4" },
+];
+
+const FALLBACK_PLANS: SubscriptionPlan[] = [
+  { id: 1, name: "Starter", description: "For small teams getting started", priceMonthly: 29, priceYearly: 290, maxUsers: 10, features: ["Up to 10 users", "Basic analytics", "Email support"], isPopular: false },
+  { id: 2, name: "Growth", description: "For growing organizations", priceMonthly: 99, priceYearly: 990, maxUsers: 50, features: ["Up to 50 users", "Advanced analytics", "Priority support", "Custom roles"], isPopular: true },
+  { id: 3, name: "Enterprise", description: "For large-scale deployments", priceMonthly: 299, priceYearly: 2990, maxUsers: 999999, features: ["Unlimited users", "Full analytics suite", "24/7 phone support", "Custom integrations", "SLA guarantee"], isPopular: false },
+];
+
 const STEPS = [
   { id: 1, title: "Industry" },
   { id: 2, title: "Organization" },
@@ -32,8 +47,10 @@ export default function Register() {
   const [_, setLocation] = useLocation();
   const { login } = useAuth();
   const { setTheme, theme } = useTheme();
-  const { data: industryPacks } = useListIndustryPacks();
-  const { data: plans } = useListSubscriptions();
+  const { data: apiPacks } = useListIndustryPacks();
+  const { data: apiPlans } = useListSubscriptions();
+  const industryPacks = apiPacks && apiPacks.length > 0 ? apiPacks : FALLBACK_PACKS;
+  const plans = apiPlans && apiPlans.length > 0 ? apiPlans : FALLBACK_PLANS;
   const [step, setStep] = useState(1);
   const [submitting, setSubmitting] = useState(false);
 
