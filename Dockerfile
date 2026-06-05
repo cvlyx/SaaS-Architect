@@ -1,4 +1,4 @@
-FROM node:24-alpine AS base
+FROM node:24-slim AS base
 RUN npm install -g pnpm@latest
 WORKDIR /app
 
@@ -18,8 +18,7 @@ COPY lib/api-zod lib/api-zod
 COPY lib/api-client-react lib/api-client-react
 COPY artifacts/api-server artifacts/api-server
 
-# Build shared libs first, then api-server
-RUN pnpm --filter @workspace/db run build 2>/dev/null; true
+# Build the api-server bundle
 RUN pnpm --filter @workspace/api-server run build
 
 EXPOSE 3001
