@@ -35,12 +35,6 @@ catalog:
 
 autoInstallPeers: false
 
-onlyBuiltDependencies:
-  - '@swc/core'
-  - esbuild
-  - msw
-  - unrs-resolver
-
 overrides:
   # No platform exclusions - support all platforms natively
   # drizzle-kit uses esbuild internally on an older version that's vulnerable, this overrides it
