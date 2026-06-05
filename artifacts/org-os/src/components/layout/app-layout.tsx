@@ -29,13 +29,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 
-const NAV_ITEMS = [
-  { name: "Dashboard", href: "/app", icon: LayoutDashboard },
-  { name: "Organizations", href: "/app/organizations", icon: Building2 },
-  { name: "Users", href: "/app/users", icon: Users },
-  { name: "Industry Packs", href: "/app/industry-packs", icon: Package },
-  { name: "Subscriptions", href: "/app/subscriptions", icon: CreditCard },
-  { name: "Modules", href: "/app/modules", icon: Blocks },
+const ALL_NAV_ITEMS = [
+  { name: "Dashboard", href: "/app", icon: LayoutDashboard, adminOnly: false },
+  { name: "Organizations", href: "/app/organizations", icon: Building2, adminOnly: true },
+  { name: "Users", href: "/app/users", icon: Users, adminOnly: true },
+  { name: "Industry Packs", href: "/app/industry-packs", icon: Package, adminOnly: true },
+  { name: "Subscriptions", href: "/app/subscriptions", icon: CreditCard, adminOnly: true },
+  { name: "Modules", href: "/app/modules", icon: Blocks, adminOnly: true },
 ];
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
@@ -43,6 +43,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   const { user, logout } = useAuth();
   const { theme, setTheme } = useTheme();
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
+  const isSuperAdmin = user?.role === "super_admin";
 
   const handleLogout = () => {
     logout();
@@ -51,7 +52,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
 
   const NavLinks = () => (
     <>
-      {NAV_ITEMS.map((item) => {
+      {ALL_NAV_ITEMS.filter(item => !item.adminOnly || isSuperAdmin).map((item) => {
         const isActive = location === item.href || (location.startsWith(item.href + "/") && item.href !== "/app");
         return (
           <Link
@@ -73,41 +74,40 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <div className="grid min-h-screen w-full md:grid-cols-[240px_1fr] lg:grid-cols-[260px_1fr]">
-      {/* Desktop Sidebar */}
-      <div className="hidden border-r bg-sidebar md:block">
-        <div className="flex h-full max-h-screen flex-col gap-2">
-          <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
-            <Link href="/" className="flex items-center gap-2 font-semibold text-primary">
-              <div className="flex h-7 w-7 items-center justify-center rounded bg-primary text-primary-foreground">
-                <LayoutDashboard className="h-4 w-4" />
-              </div>
-              <span className="">Organization OS</span>
-            </Link>
+    <div className="min-h-screen w-full">
+      {/* Desktop Sidebar - fixed */}
+      <aside className="fixed left-0 top-0 z-30 hidden h-screen w-[240px] flex-col border-r bg-sidebar lg:w-[260px] md:flex">
+        <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
+          <Link href="/" className="flex items-center gap-2 font-semibold text-primary">
+            <div className="flex h-7 w-7 items-center justify-center rounded bg-primary text-primary-foreground">
+              <LayoutDashboard className="h-4 w-4" />
+            </div>
+            <span>Organization OS</span>
+          </Link>
+        </div>
+        <nav className="flex-1 overflow-y-auto py-2 px-2 lg:px-4">
+          <div className="grid items-start gap-1 text-sm font-medium">
+            <NavLinks />
           </div>
-          <div className="flex-1 overflow-auto py-2">
-            <nav className="grid items-start px-2 text-sm font-medium lg:px-4 gap-1">
-              <NavLinks />
-            </nav>
-          </div>
-          <div className="mt-auto p-4 border-t border-sidebar-border">
-            <div className="flex items-center gap-3">
-              <Avatar className="h-9 w-9">
-                <AvatarImage src={user?.avatarUrl || ""} alt={user?.fullName || "User"} />
-                <AvatarFallback>{user?.fullName?.charAt(0) || "U"}</AvatarFallback>
-              </Avatar>
-              <div className="flex flex-col overflow-hidden">
-                <span className="text-sm font-medium truncate">{user?.fullName || "Admin User"}</span>
-                <span className="text-xs text-muted-foreground truncate">{user?.email || "admin@org-os.com"}</span>
-              </div>
+        </nav>
+        <div className="mt-auto p-4 border-t border-sidebar-border">
+          <div className="flex items-center gap-3">
+            <Avatar className="h-9 w-9">
+              <AvatarImage src={user?.avatarUrl || ""} alt={user?.fullName || "User"} />
+              <AvatarFallback>{user?.fullName?.charAt(0) || "U"}</AvatarFallback>
+            </Avatar>
+            <div className="flex flex-col overflow-hidden">
+              <span className="text-sm font-medium truncate">{user?.fullName || "Admin User"}</span>
+              <span className="text-xs text-muted-foreground truncate">{user?.email || "admin@org-os.com"}</span>
             </div>
           </div>
         </div>
-      </div>
+      </aside>
 
-      <div className="flex flex-col">
+      {/* Main content area */}
+      <div className="flex flex-col md:ml-[240px] lg:ml-[260px]">
         {/* Header */}
-        <header className="flex h-14 items-center gap-4 border-b bg-background px-4 lg:h-[60px] lg:px-6">
+        <header className="sticky top-0 z-20 flex h-14 items-center gap-4 border-b bg-background px-4 lg:h-[60px] lg:px-6">
           <Sheet open={isMobileNavOpen} onOpenChange={setIsMobileNavOpen}>
             <SheetTrigger asChild>
               <Button
@@ -125,7 +125,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                   <div className="flex h-7 w-7 items-center justify-center rounded bg-primary text-primary-foreground">
                     <LayoutDashboard className="h-4 w-4" />
                   </div>
-                  <span className="">Organization OS</span>
+                  <span>Organization OS</span>
                 </Link>
               </div>
               <nav className="grid gap-2 text-lg font-medium p-4">

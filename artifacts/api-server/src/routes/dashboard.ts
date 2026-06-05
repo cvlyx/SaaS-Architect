@@ -40,7 +40,7 @@ router.get("/activity", async (req, res) => {
       type: ["signup", "subscription", "upgrade", "signup", "subscription"][i % 5] as string,
       description: `${org.name} ${["joined the platform", "subscribed to Pro plan", "upgraded to Enterprise", "started free trial", "renewed subscription"][i % 5]}`,
       organizationName: org.name,
-      timestamp: org.createdAt.toISOString(),
+      timestamp: new Date(org.createdAt).toISOString(),
     }));
 
     res.json(activities);

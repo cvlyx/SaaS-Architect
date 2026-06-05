@@ -13,12 +13,23 @@ export function GrowthMetrics() {
         </CardHeader>
         <CardContent className="flex items-end gap-2 h-[300px] p-6">
           {[1, 2, 3, 4, 5, 6].map(i => (
-            <div key={i} className="w-1/6 bg-muted animate-pulse rounded-t-sm" style={{ height: `${Math.max(20, Math.random() * 100)}%` }}></div>
+            <div key={i} className="w-1/6 bg-muted animate-pulse rounded-t-sm" style={{ height: `${[60, 80, 40, 90, 50, 70][i]}%` }}></div>
           ))}
         </CardContent>
       </Card>
     );
   }
+
+  const mockMetrics = [
+    { month: "Jan", newOrganizations: 12, revenue: 8500, activeUsers: 245 },
+    { month: "Feb", newOrganizations: 18, revenue: 12000, activeUsers: 290 },
+    { month: "Mar", newOrganizations: 24, revenue: 15600, activeUsers: 345 },
+    { month: "Apr", newOrganizations: 31, revenue: 19200, activeUsers: 420 },
+    { month: "May", newOrganizations: 38, revenue: 23800, activeUsers: 510 },
+    { month: "Jun", newOrganizations: 42, revenue: 26500, activeUsers: 595 },
+  ];
+  
+  const data = metrics || mockMetrics;
 
   return (
     <Card className="col-span-4">
@@ -29,7 +40,7 @@ export function GrowthMetrics() {
       <CardContent>
         <div className="h-[300px]">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={metrics || []}>
+            <BarChart data={data}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
               <XAxis dataKey="month" axisLine={false} tickLine={false} />
               <YAxis yAxisId="left" orientation="left" stroke="#00C49F" axisLine={false} tickLine={false} />

@@ -47,3 +47,10 @@ Thumbs.db
 # Replit
 .cache/
 .local/
+
+.vercel
+
+# Local SQLite databases (created by drizzle-kit or libsql)
+*.db
+*.db-wal
+*.db-shm

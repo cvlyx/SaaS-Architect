@@ -20,6 +20,17 @@ export function IndustryBreakdown() {
     );
   }
 
+  const mockBreakdown = [
+    { industry: "Healthcare", count: 12, percentage: 29 },
+    { industry: "Education", count: 10, percentage: 24 },
+    { industry: "Technology", count: 8, percentage: 19 },
+    { industry: "Finance", count: 6, percentage: 14 },
+    { industry: "Retail", count: 4, percentage: 10 },
+    { industry: "Other", count: 2, percentage: 5 },
+  ];
+
+  const data = breakdown || mockBreakdown;
+
   return (
     <Card className="col-span-3">
       <CardHeader>
@@ -31,7 +42,7 @@ export function IndustryBreakdown() {
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
-                data={breakdown || []}
+                data={data}
                 cx="50%"
                 cy="50%"
                 innerRadius={60}
@@ -40,7 +51,7 @@ export function IndustryBreakdown() {
                 dataKey="count"
                 nameKey="industry"
               >
-                {(breakdown || []).map((entry, index) => (
+                {data.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>

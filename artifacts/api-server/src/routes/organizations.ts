@@ -26,15 +26,15 @@ router.post("/", async (req, res) => {
   if (!parsed.success) return res.status(400).json({ error: "Invalid body", details: parsed.error });
 
   try {
-    const trialEndsAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+    const trialEndsAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
     const [org] = await db
       .insert(organizationsTable)
       .values({ ...parsed.data, trialEndsAt })
       .returning();
-    res.status(201).json(org);
+    return res.status(201).json(org);
   } catch (err) {
     req.log.error({ err }, "Failed to create organization");
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 });
 
@@ -48,10 +48,10 @@ router.get("/:id", async (req, res) => {
       .from(organizationsTable)
       .where(eq(organizationsTable.id, parsed.data.id));
     if (!org) return res.status(404).json({ error: "Not found" });
-    res.json(org);
+    return res.json(org);
   } catch (err) {
     req.log.error({ err }, "Failed to get organization");
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 });
 
@@ -68,10 +68,10 @@ router.patch("/:id", async (req, res) => {
       .where(eq(organizationsTable.id, paramsParsed.data.id))
       .returning();
     if (!org) return res.status(404).json({ error: "Not found" });
-    res.json(org);
+    return res.json(org);
   } catch (err) {
     req.log.error({ err }, "Failed to update organization");
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 });
 
@@ -92,7 +92,7 @@ router.get("/:id/stats", async (req, res) => {
 
     if (!org) return res.status(404).json({ error: "Not found" });
 
-    res.json({
+    return res.json({
       totalUsers: Number(userCount?.count ?? 0),
       activeModules: 3,
       storageUsedMb: Math.round(Math.random() * 500 + 50),
@@ -100,7 +100,7 @@ router.get("/:id/stats", async (req, res) => {
     });
   } catch (err) {
     req.log.error({ err }, "Failed to get org stats");
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 });
 

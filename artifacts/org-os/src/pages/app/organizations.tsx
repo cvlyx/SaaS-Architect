@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Link } from "wouter";
+import { toast } from "sonner";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useListOrganizations, useListIndustryPacks, useCreateOrganization } from "@workspace/api-client-react";
 import { IndustryIcon } from "@/components/industry-icon";
 import type { Organization, IndustryPack } from "@workspace/api-client-react";
@@ -32,7 +34,26 @@ const ORG_SIZES = ["1-10", "11-50", "51-200", "201-500", "500+"];
 function CreateOrgDialog({ onCreated }: { onCreated: () => void }) {
   const [open, setOpen] = useState(false);
   const { data: packs } = useListIndustryPacks();
-  const createOrg = useCreateOrganization();
+  const queryClient = useQueryClient();
+  const createOrg = useCreateOrganization({
+    mutation: {
+      onMutate: async (orgData) => {
+        await queryClient.cancelQueries({ queryKey: ["/api/organizations"] });
+        const prev = queryClient.getQueryData(["/api/organizations"]);
+        const optimistic = { id: Date.now(), ...orgData.data, status: "trial", createdAt: new Date().toISOString(), logoUrl: null, website: orgData.data.website || null };
+        queryClient.setQueryData(["/api/organizations"], (old: any) => [...(old || []), optimistic]);
+        return { prev };
+      },
+      onError: (_err, _vars, ctx) => {
+        if (ctx?.prev) queryClient.setQueryData(["/api/organizations"], ctx.prev);
+        toast.error("Failed to create organization");
+      },
+      onSettled: () => {
+        queryClient.invalidateQueries({ queryKey: ["/api/organizations"] });
+        toast.success("Organization created");
+      },
+    },
+  });
   const [form, setForm] = useState({
     name: "", type: "Private", country: "United States",
     city: "", size: "11-50", industryPackId: 1, website: "",
@@ -171,8 +192,20 @@ export default function Organizations() {
         </CardHeader>
         <CardContent className="p-0">
           {isLoading ? (
-            <div className="flex items-center justify-center py-16">
-              <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+            <div className="p-4 space-y-3">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <div key={i} className="flex items-center gap-4 py-3">
+                  <Skeleton className="h-9 w-9 rounded-lg" />
+                  <div className="flex-1 space-y-1.5">
+                    <Skeleton className="h-4 w-48" />
+                    <Skeleton className="h-3 w-32" />
+                  </div>
+                  <Skeleton className="h-4 w-20 hidden md:block" />
+                  <Skeleton className="h-4 w-16 hidden sm:block" />
+                  <Skeleton className="h-5 w-14 rounded-full" />
+                  <Skeleton className="h-4 w-24 hidden lg:block" />
+                </div>
+              ))}
             </div>
           ) : (
             <Table>

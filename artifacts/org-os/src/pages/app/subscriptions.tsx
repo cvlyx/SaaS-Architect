@@ -11,7 +11,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow
 } from "@/components/ui/table";
-import { CreditCard, CheckCircle2, TrendingUp, DollarSign, Loader2 } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { CreditCard, CheckCircle2, TrendingUp, DollarSign } from "lucide-react";
 import { format } from "date-fns";
 
 const PAYMENT_STATUS_COLORS: Record<string, string> = {
@@ -144,8 +145,16 @@ function PaymentHistory() {
         </CardHeader>
         <CardContent className="p-0">
           {isLoading ? (
-            <div className="flex items-center justify-center py-16">
-              <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+            <div className="p-4 space-y-3">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="flex items-center gap-4 py-3">
+                  <Skeleton className="h-8 w-8 rounded-lg" />
+                  <Skeleton className="h-4 w-48 flex-1" />
+                  <Skeleton className="h-4 w-20" />
+                  <Skeleton className="h-5 w-14 rounded-full" />
+                  <Skeleton className="h-4 w-28 hidden md:block" />
+                </div>
+              ))}
             </div>
           ) : (
             <Table>

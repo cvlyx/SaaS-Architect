@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 import { useListUsers, useListOrganizations, useCreateUser } from "@workspace/api-client-react";
 import type { User, Organization } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
@@ -13,6 +15,7 @@ import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow
 } from "@/components/ui/table";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Users, Plus, Search, Loader2 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
@@ -26,8 +29,27 @@ const ROLES = ["admin", "member", "viewer", "manager", "super_admin"];
 
 function CreateUserDialog({ onCreated }: { onCreated: () => void }) {
   const [open, setOpen] = useState(false);
+  const queryClient = useQueryClient();
   const { data: orgs } = useListOrganizations();
-  const createUser = useCreateUser();
+  const createUser = useCreateUser({
+    mutation: {
+      onMutate: async (userData) => {
+        await queryClient.cancelQueries({ queryKey: ["/api/users"] });
+        const prev = queryClient.getQueryData(["/api/users"]);
+        const optimistic = { id: Date.now(), ...userData.data, status: "active", createdAt: new Date().toISOString(), avatarUrl: null, phone: userData.data.phone || null };
+        queryClient.setQueryData(["/api/users"], (old: any) => [...(old || []), optimistic]);
+        return { prev };
+      },
+      onError: (_err, _vars, ctx) => {
+        if (ctx?.prev) queryClient.setQueryData(["/api/users"], ctx.prev);
+        toast.error("Failed to create user");
+      },
+      onSettled: () => {
+        queryClient.invalidateQueries({ queryKey: ["/api/users"] });
+        toast.success("User created");
+      },
+    },
+  });
   const [form, setForm] = useState({
     fullName: "", email: "", phone: "",
     role: "member", organizationId: 1, password: "",
@@ -172,8 +194,20 @@ export default function UsersPage() {
         </CardHeader>
         <CardContent className="p-0">
           {isLoading ? (
-            <div className="flex items-center justify-center py-16">
-              <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+            <div className="p-4 space-y-3">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <div key={i} className="flex items-center gap-4 py-3">
+                  <Skeleton className="h-8 w-8 rounded-full" />
+                  <div className="flex-1 space-y-1.5">
+                    <Skeleton className="h-4 w-40" />
+                    <Skeleton className="h-3 w-56" />
+                  </div>
+                  <Skeleton className="h-5 w-16 rounded-md" />
+                  <Skeleton className="h-4 w-28 hidden md:block" />
+                  <Skeleton className="h-5 w-14 rounded-full" />
+                  <Skeleton className="h-4 w-24 hidden lg:block" />
+                </div>
+              ))}
             </div>
           ) : (
             <Table>

@@ -62,12 +62,12 @@
 
 /* LIGHT MODE */
 :root {
-  --background: 0 0% 100%;
+  --background: 220 30% 96%;
   --foreground: 222.2 84% 4.9%;
 
   --border: 214.3 31.8% 91.4%;
   --input: 214.3 31.8% 91.4%;
-  --ring: 162 73% 46%;
+  --ring: 262 83% 58%;
 
   --card: 0 0% 100%;
   --card-foreground: 222.2 84% 4.9%;
@@ -77,7 +77,7 @@
   --popover-foreground: 222.2 84% 4.9%;
   --popover-border: 214.3 31.8% 91.4%;
 
-  --primary: 162 73% 46%;
+  --primary: 262 83% 58%;
   --primary-foreground: 0 0% 100%;
 
   --secondary: 210 40% 96.1%;
@@ -99,13 +99,13 @@
   --sidebar-primary-foreground: 0 0% 98%;
   --sidebar-accent: 240 4.8% 95.9%;
   --sidebar-accent-foreground: 240 5.9% 10%;
-  --sidebar-ring: 217.2 91.2% 59.8%;
+  --sidebar-ring: 262 83% 58%;
 
-  --chart-1: 162 73% 46%;
-  --chart-2: 180 73% 46%;
-  --chart-3: 140 73% 46%;
-  --chart-4: 200 73% 46%;
-  --chart-5: 220 73% 46%;
+  --chart-1: 262 83% 58%;
+  --chart-2: 280 83% 58%;
+  --chart-3: 300 83% 58%;
+  --chart-4: 320 83% 58%;
+  --chart-5: 340 83% 58%;
 
   --app-font-sans: 'Inter', sans-serif;
   --app-font-serif: Georgia, serif;
@@ -114,22 +114,22 @@
 }
 
 .dark {
-  --background: 222.2 84% 4.9%;
+  --background: 222 47% 11%;
   --foreground: 210 40% 98%;
 
   --border: 217.2 32.6% 17.5%;
   --input: 217.2 32.6% 17.5%;
-  --ring: 162 73% 46%;
+  --ring: 262 83% 58%;
 
-  --card: 222.2 84% 4.9%;
+  --card: 220 39% 14%;
   --card-foreground: 210 40% 98%;
   --card-border: 217.2 32.6% 17.5%;
 
-  --popover: 222.2 84% 4.9%;
+  --popover: 222 39% 14%;
   --popover-foreground: 210 40% 98%;
   --popover-border: 217.2 32.6% 17.5%;
 
-  --primary: 162 73% 46%;
+  --primary: 262 83% 58%;
   --primary-foreground: 0 0% 100%;
 
   --secondary: 217.2 32.6% 17.5%;
@@ -144,20 +144,20 @@
   --destructive: 0 62.8% 30.6%;
   --destructive-foreground: 210 40% 98%;
 
-  --sidebar: 240 5.9% 10%;
+  --sidebar: 220 39% 14%;
   --sidebar-foreground: 240 4.8% 95.9%;
-  --sidebar-border: 220 13% 91%;
-  --sidebar-primary: 224.3 76.3% 48%;
+  --sidebar-border: 217.2 32.6% 17.5%;
+  --sidebar-primary: 262 83% 58%;
   --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 240 3.7% 15.9%;
-  --sidebar-accent-foreground: 240 4.8% 95.9%;
-  --sidebar-ring: 217.2 91.2% 59.8%;
+  --sidebar-accent: 217.2 32.6% 17.5%;
+  --sidebar-accent-foreground: 210 40% 98%;
+  --sidebar-ring: 262 83% 58%;
 
-  --chart-1: 162 73% 46%;
-  --chart-2: 180 73% 46%;
-  --chart-3: 140 73% 46%;
-  --chart-4: 200 73% 46%;
-  --chart-5: 220 73% 46%;
+  --chart-1: 262 83% 58%;
+  --chart-2: 280 83% 58%;
+  --chart-3: 300 83% 58%;
+  --chart-4: 320 83% 58%;
+  --chart-5: 340 83% 58%;
 }
 
 @layer base {
@@ -166,6 +166,50 @@
   }
 
   body {
-    @apply font-sans antialiased bg-background text-foreground;
+    @apply font-sans antialiased bg-background text-foreground transition-colors duration-300;
+  }
+}
+
+@layer utilities {
+  .glass {
+    background: rgba(255, 255, 255, 0.25);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+  }
+  
+  .glass-card {
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+  
+  .glass-input {
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  .dark .glass {
+    background: rgba(0, 0, 0, 0.25);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  
+  .dark .glass-card {
+    background: rgba(0, 0, 0, 0.15);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  
+  .dark .glass-input {
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
   }
 }

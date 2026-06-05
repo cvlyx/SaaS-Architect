@@ -1,9 +1,10 @@
-import { Switch, Route, Router as WouterRouter } from "wouter";
+import { Switch, Route, Router as WouterRouter, useLocation } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/lib/theme-provider";
 import { AuthProvider, useAuth } from "@/lib/auth-provider";
+import { AnimatePresence, motion } from "framer-motion";
 import NotFound from "@/pages/not-found";
 import { AppLayout } from "@/components/layout/app-layout";
 
@@ -33,6 +34,20 @@ function PublicLayout({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
+const pageVariants = {
+  initial: { opacity: 0, y: 12 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.25, ease: "easeOut" as const } },
+  exit: { opacity: 0, y: -12, transition: { duration: 0.15, ease: "easeIn" as const } },
+};
+
+function AnimatedPage({ children }: { children: React.ReactNode }) {
+  return (
+    <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">
+      {children}
+    </motion.div>
+  );
+}
+
 const ProtectedRoute = ({ component: Component }: { component: React.ComponentType }) => {
   const { isAuthenticated } = useAuth();
   if (!isAuthenticated) {
@@ -41,36 +56,41 @@ const ProtectedRoute = ({ component: Component }: { component: React.ComponentTy
   }
   return (
     <AppLayout>
-      <Component />
+      <AnimatedPage>
+        <Component />
+      </AnimatedPage>
     </AppLayout>
   );
 };
 
 function Router() {
+  const [location] = useLocation();
   return (
-    <Switch>
-      {/* Public */}
-      <Route path="/"><PublicLayout><Landing /></PublicLayout></Route>
-      <Route path="/login"><PublicLayout><Login /></PublicLayout></Route>
-      <Route path="/register"><PublicLayout><Register /></PublicLayout></Route>
+    <AnimatePresence mode="wait">
+      <Switch key={location}>
+        {/* Public */}
+        <Route path="/"><PublicLayout><AnimatedPage><Landing /></AnimatedPage></PublicLayout></Route>
+        <Route path="/login"><PublicLayout><AnimatedPage><Login /></AnimatedPage></PublicLayout></Route>
+        <Route path="/register"><PublicLayout><AnimatedPage><Register /></AnimatedPage></PublicLayout></Route>
 
-      {/* Protected app */}
-      <Route path="/app"><ProtectedRoute component={Dashboard} /></Route>
-      <Route path="/app/organizations"><ProtectedRoute component={Organizations} /></Route>
-      <Route path="/app/users"><ProtectedRoute component={UsersPage} /></Route>
-      <Route path="/app/industry-packs"><ProtectedRoute component={IndustryPacksPage} /></Route>
-      <Route path="/app/subscriptions"><ProtectedRoute component={SubscriptionsPage} /></Route>
-      <Route path="/app/modules"><ProtectedRoute component={ModulesPage} /></Route>
+        {/* Protected app */}
+        <Route path="/app"><ProtectedRoute component={Dashboard} /></Route>
+        <Route path="/app/organizations"><ProtectedRoute component={Organizations} /></Route>
+        <Route path="/app/users"><ProtectedRoute component={UsersPage} /></Route>
+        <Route path="/app/industry-packs"><ProtectedRoute component={IndustryPacksPage} /></Route>
+        <Route path="/app/subscriptions"><ProtectedRoute component={SubscriptionsPage} /></Route>
+        <Route path="/app/modules"><ProtectedRoute component={ModulesPage} /></Route>
 
-      <Route component={NotFound} />
-    </Switch>
+        <Route component={NotFound} />
+      </Switch>
+    </AnimatePresence>
   );
 }
 
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider defaultTheme="light" storageKey="org-os-theme">
+      <ThemeProvider defaultTheme="dark" storageKey="org-os-theme">
         <AuthProvider>
           <TooltipProvider>
             <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>

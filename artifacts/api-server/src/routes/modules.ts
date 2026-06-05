@@ -33,10 +33,10 @@ router.get("/organization/:orgId", async (req, res) => {
       .filter(m => moduleIds.includes(m.id))
       .map(m => ({ ...m, priceMonthly: m.priceMonthly ? Number(m.priceMonthly) : null }));
 
-    res.json(filtered);
+    return res.json(filtered);
   } catch (err) {
     req.log.error({ err }, "Failed to get org modules");
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 });
 

@@ -1,11 +1,13 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useCallback, useEffect } from "react";
+import { setAuthTokenGetter } from "@workspace/api-client-react";
 
-interface User {
+export interface User {
   id: number;
   fullName: string;
   email: string;
   role: string;
   organizationId: number;
+  industryPackId?: number;
   status: string;
   avatarUrl?: string | null;
   phone?: string | null;
@@ -14,31 +16,45 @@ interface User {
 
 interface AuthContextType {
   user: User | null;
-  login: (user: User) => void;
+  token: string | null;
+  login: (token: string, user: User) => void;
   logout: () => void;
   isAuthenticated: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const TOKEN_KEY = "org_os_token";
+const USER_KEY = "org_os_user";
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [token, setToken] = useState<string | null>(() => localStorage.getItem(TOKEN_KEY));
   const [user, setUser] = useState<User | null>(() => {
-    const stored = localStorage.getItem("org_os_user");
+    const stored = localStorage.getItem(USER_KEY);
     return stored ? JSON.parse(stored) : null;
   });
 
-  const login = (userData: User) => {
-    setUser(userData);
-    localStorage.setItem("org_os_user", JSON.stringify(userData));
-  };
+  useEffect(() => {
+    setAuthTokenGetter(() => token);
+  }, [token]);
 
-  const logout = () => {
+  const login = useCallback((newToken: string, userData: User) => {
+    setToken(newToken);
+    setUser(userData);
+    localStorage.setItem(TOKEN_KEY, newToken);
+    localStorage.setItem(USER_KEY, JSON.stringify(userData));
+  }, []);
+
+  const logout = useCallback(() => {
+    setToken(null);
     setUser(null);
-    localStorage.removeItem("org_os_user");
-  };
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(USER_KEY);
+    setAuthTokenGetter(null);
+  }, []);
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isAuthenticated: !!user }}>
+    <AuthContext.Provider value={{ user, token, login, logout, isAuthenticated: !!token && !!user }}>
       {children}
     </AuthContext.Provider>
   );

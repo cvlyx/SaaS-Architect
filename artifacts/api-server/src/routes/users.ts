@@ -1,4 +1,5 @@
 import { Router } from "express";
+import bcrypt from "bcryptjs";
 import { db, usersTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
 import {
@@ -22,10 +23,10 @@ router.get("/", async (req, res) => {
       query = query.where(eq(usersTable.organizationId, parsed.data.organizationId)) as typeof query;
     }
     const users = await query.orderBy(usersTable.createdAt);
-    res.json(users);
+    return res.json(users);
   } catch (err) {
     req.log.error({ err }, "Failed to list users");
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 });
 
@@ -34,15 +35,16 @@ router.post("/", async (req, res) => {
   if (!parsed.success) return res.status(400).json({ error: "Invalid body", details: parsed.error });
 
   try {
-    const { password: _password, ...userData } = parsed.data;
+    const { password, ...userData } = parsed.data;
+    const passwordHash = password ? await bcrypt.hash(password, 10) : null;
     const [user] = await db
       .insert(usersTable)
-      .values({ ...userData, passwordHash: "hashed" })
+      .values({ ...userData, passwordHash })
       .returning();
-    res.status(201).json(user);
+    return res.status(201).json(user);
   } catch (err) {
     req.log.error({ err }, "Failed to create user");
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 });
 
@@ -56,10 +58,10 @@ router.get("/:id", async (req, res) => {
       .from(usersTable)
       .where(eq(usersTable.id, parsed.data.id));
     if (!user) return res.status(404).json({ error: "Not found" });
-    res.json(user);
+    return res.json(user);
   } catch (err) {
     req.log.error({ err }, "Failed to get user");
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 });
 
@@ -76,10 +78,10 @@ router.patch("/:id", async (req, res) => {
       .where(eq(usersTable.id, paramsParsed.data.id))
       .returning();
     if (!user) return res.status(404).json({ error: "Not found" });
-    res.json(user);
+    return res.json(user);
   } catch (err) {
     req.log.error({ err }, "Failed to update user");
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 });
 
@@ -89,10 +91,10 @@ router.delete("/:id", async (req, res) => {
 
   try {
     await db.delete(usersTable).where(eq(usersTable.id, parsed.data.id));
-    res.status(204).send();
+    return res.status(204).send();
   } catch (err) {
     req.log.error({ err }, "Failed to delete user");
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 });
 

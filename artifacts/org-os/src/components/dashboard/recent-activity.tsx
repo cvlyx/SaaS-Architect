@@ -31,6 +31,46 @@ export function RecentActivity() {
     );
   }
 
+  const mockActivity = [
+    { 
+      id: 1, 
+      type: "signup" as ActivityItemType, 
+      description: "joined the platform", 
+      organizationName: "Acme Healthcare", 
+      timestamp: new Date(Date.now() - 1000 * 60 * 15).toISOString() 
+    },
+    { 
+      id: 2, 
+      type: "subscription" as ActivityItemType, 
+      description: "subscribed to Pro plan", 
+      organizationName: "Bright Future School", 
+      timestamp: new Date(Date.now() - 1000 * 60 * 45).toISOString() 
+    },
+    { 
+      id: 3, 
+      type: "upgrade" as ActivityItemType, 
+      description: "upgraded to Enterprise", 
+      organizationName: "Innovate Tech", 
+      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString() 
+    },
+    { 
+      id: 4, 
+      type: "signup" as ActivityItemType, 
+      description: "started free trial", 
+      organizationName: "Metro Retail", 
+      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 5).toISOString() 
+    },
+    { 
+      id: 5, 
+      type: "subscription" as ActivityItemType, 
+      description: "renewed subscription", 
+      organizationName: "City Finance", 
+      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 8).toISOString() 
+    },
+  ];
+
+  const data = activity || mockActivity;
+
   const getIcon = (type: ActivityItemType) => {
     switch (type) {
       case 'signup': return <UserPlus className="h-4 w-4 text-emerald-500" />;
@@ -50,7 +90,7 @@ export function RecentActivity() {
       </CardHeader>
       <CardContent>
         <div className="space-y-8">
-          {(activity || []).map((item) => (
+          {data.map((item) => (
             <div key={item.id} className="flex items-start gap-4">
               <div className="mt-0.5 rounded-full bg-muted p-2 flex items-center justify-center">
                 {getIcon(item.type)}
@@ -68,7 +108,7 @@ export function RecentActivity() {
               </div>
             </div>
           ))}
-          {(!activity || activity.length === 0) && (
+          {(!data || data.length === 0) && (
             <p className="text-sm text-muted-foreground text-center py-4">No recent activity</p>
           )}
         </div>
