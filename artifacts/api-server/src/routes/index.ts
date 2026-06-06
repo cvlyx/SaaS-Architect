@@ -8,6 +8,7 @@ import modulesRouter from "./modules";
 import dashboardRouter from "./dashboard";
 import authRouter from "./auth";
 import educationRouter from "./education";
+import industriesRouter from "./industries";
 
 const router: IRouter = Router();
 
@@ -20,5 +21,6 @@ router.use("/users", usersRouter);
 router.use("/modules", modulesRouter);
 router.use("/dashboard", dashboardRouter);
 router.use("/education", educationRouter);
+router.use("/industries", industriesRouter);
 
 export default router;

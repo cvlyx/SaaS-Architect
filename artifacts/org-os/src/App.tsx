@@ -26,6 +26,13 @@ import EducationStudents from "@/pages/app/education/students";
 import EducationTeachers from "@/pages/app/education/teachers";
 import EducationClasses from "@/pages/app/education/classes";
 
+// Industry pages
+import { HealthcarePatients, HealthcareStaff, HealthcareAppointments } from "@/pages/app/industry/healthcare";
+import { ConstructionProjects, ConstructionWorkers, ConstructionSafetyReports } from "@/pages/app/industry/construction";
+import { RetailProducts, RetailInventory, RetailCustomers } from "@/pages/app/industry/retail";
+import { TechnologyProjects, TechnologyTasks, TechnologyTeamMembers } from "@/pages/app/industry/technology";
+import { FinanceAccounts, FinanceTransactions, FinanceBudgets } from "@/pages/app/industry/finance";
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -90,6 +97,31 @@ function Router() {
         <Route path="/app/education/students"><ProtectedRoute component={EducationStudents} /></Route>
         <Route path="/app/education/teachers"><ProtectedRoute component={EducationTeachers} /></Route>
         <Route path="/app/education/classes"><ProtectedRoute component={EducationClasses} /></Route>
+
+        {/* Healthcare routes */}
+        <Route path="/app/healthcare/patients"><ProtectedRoute component={HealthcarePatients} /></Route>
+        <Route path="/app/healthcare/staff"><ProtectedRoute component={HealthcareStaff} /></Route>
+        <Route path="/app/healthcare/appointments"><ProtectedRoute component={HealthcareAppointments} /></Route>
+
+        {/* Construction routes */}
+        <Route path="/app/construction/projects"><ProtectedRoute component={ConstructionProjects} /></Route>
+        <Route path="/app/construction/workers"><ProtectedRoute component={ConstructionWorkers} /></Route>
+        <Route path="/app/construction/safety-reports"><ProtectedRoute component={ConstructionSafetyReports} /></Route>
+
+        {/* Retail routes */}
+        <Route path="/app/retail/products"><ProtectedRoute component={RetailProducts} /></Route>
+        <Route path="/app/retail/inventory"><ProtectedRoute component={RetailInventory} /></Route>
+        <Route path="/app/retail/customers"><ProtectedRoute component={RetailCustomers} /></Route>
+
+        {/* Technology routes */}
+        <Route path="/app/technology/projects"><ProtectedRoute component={TechnologyProjects} /></Route>
+        <Route path="/app/technology/tasks"><ProtectedRoute component={TechnologyTasks} /></Route>
+        <Route path="/app/technology/team-members"><ProtectedRoute component={TechnologyTeamMembers} /></Route>
+
+        {/* Finance routes */}
+        <Route path="/app/finance/accounts"><ProtectedRoute component={FinanceAccounts} /></Route>
+        <Route path="/app/finance/transactions"><ProtectedRoute component={FinanceTransactions} /></Route>
+        <Route path="/app/finance/budgets"><ProtectedRoute component={FinanceBudgets} /></Route>
 
         <Route component={NotFound} />
       </Switch>

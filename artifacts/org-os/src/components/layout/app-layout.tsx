@@ -11,6 +11,15 @@ import {
   GraduationCap,
   BookOpen,
   UserCheck,
+  HeartPulse,
+  HardHat,
+  ShoppingCart,
+  Monitor,
+  Landmark,
+  Stethoscope,
+  FileWarning,
+  CheckSquare,
+  ArrowRightLeft,
   LogOut,
   Menu,
   Moon,
@@ -41,11 +50,38 @@ const ALL_NAV_ITEMS = [
   { name: "Modules", href: "/app/modules", icon: Blocks, adminOnly: true },
 ];
 
-const EDUCATION_NAV_ITEMS = [
-  { name: "Students", href: "/app/education/students", icon: GraduationCap },
-  { name: "Teachers", href: "/app/education/teachers", icon: UserCheck },
-  { name: "Classes", href: "/app/education/classes", icon: BookOpen },
-];
+const INDUSTRY_CONFIG: Record<number, { name: string; icon: any; items: { name: string; href: string; icon: any }[] }> = {
+  1: { name: "Healthcare", icon: HeartPulse, items: [
+    { name: "Patients", href: "/app/healthcare/patients", icon: HeartPulse },
+    { name: "Staff", href: "/app/healthcare/staff", icon: Stethoscope },
+    { name: "Appointments", href: "/app/healthcare/appointments", icon: Bell },
+  ]},
+  2: { name: "Construction", icon: HardHat, items: [
+    { name: "Projects", href: "/app/construction/projects", icon: HardHat },
+    { name: "Workers", href: "/app/construction/workers", icon: Users },
+    { name: "Safety Reports", href: "/app/construction/safety-reports", icon: FileWarning },
+  ]},
+  3: { name: "Retail", icon: ShoppingCart, items: [
+    { name: "Products", href: "/app/retail/products", icon: Package },
+    { name: "Inventory", href: "/app/retail/inventory", icon: ShoppingCart },
+    { name: "Customers", href: "/app/retail/customers", icon: Users },
+  ]},
+  4: { name: "Education", icon: GraduationCap, items: [
+    { name: "Students", href: "/app/education/students", icon: GraduationCap },
+    { name: "Teachers", href: "/app/education/teachers", icon: UserCheck },
+    { name: "Classes", href: "/app/education/classes", icon: BookOpen },
+  ]},
+  5: { name: "Technology", icon: Monitor, items: [
+    { name: "Projects", href: "/app/technology/projects", icon: Monitor },
+    { name: "Tasks", href: "/app/technology/tasks", icon: CheckSquare },
+    { name: "Members", href: "/app/technology/team-members", icon: Users },
+  ]},
+  6: { name: "Finance", icon: Landmark, items: [
+    { name: "Accounts", href: "/app/finance/accounts", icon: Landmark },
+    { name: "Transactions", href: "/app/finance/transactions", icon: ArrowRightLeft },
+    { name: "Budgets", href: "/app/finance/budgets", icon: CreditCard },
+  ]},
+};
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
   const [location, setLocation] = useLocation();
@@ -79,12 +115,12 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           </Link>
         );
       })}
-      {!isSuperAdmin && user?.industryPackId === 3 && (
+      {!isSuperAdmin && user?.industryPackId && INDUSTRY_CONFIG[user.industryPackId] && (
         <>
           <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mt-4 mb-1 px-3">
-            Education
+            {INDUSTRY_CONFIG[user.industryPackId].name}
           </div>
-          {EDUCATION_NAV_ITEMS.map((item) => {
+          {INDUSTRY_CONFIG[user.industryPackId].items.map((item) => {
             const isActive = location === item.href || location.startsWith(item.href + "/");
             return (
               <Link
