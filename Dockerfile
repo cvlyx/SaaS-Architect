@@ -3,14 +3,14 @@ RUN npm install -g pnpm@latest
 WORKDIR /app
 
 # Copy root workspace manifests
-COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json .npmrc ./
 COPY lib/db/package.json lib/db/package.json
 COPY lib/api-zod/package.json lib/api-zod/package.json
 COPY lib/api-client-react/package.json lib/api-client-react/package.json
 COPY artifacts/api-server/package.json artifacts/api-server/package.json
 
-# Install dependencies
-RUN pnpm install
+# Install dependencies (ignore build scripts to avoid pnpm v10 approval issues)
+RUN pnpm install --ignore-scripts
 
 # Copy source files
 COPY lib/db lib/db
