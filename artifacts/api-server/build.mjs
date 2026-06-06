@@ -102,10 +102,6 @@ async function buildAll() {
       "electron",
       "@libsql/client",
       "@libsql/core",
-      "@libsql/linux-x64-gnu",
-      "@libsql/darwin-x64",
-      "@libsql/darwin-arm64",
-      "@libsql/win32-x64-msvc",
     ],
     sourcemap: "linked",
     plugins: [
