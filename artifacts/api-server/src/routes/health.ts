@@ -10,15 +10,16 @@ router.get("/healthz", (_req, res) => {
 });
 
 router.get("/debug/db", async (req, res) => {
+  const token = process.env.TURSO_AUTH_TOKEN || "";
   try {
     const client = createClient({
       url: process.env.DATABASE_URL || "not-set",
-      authToken: process.env.TURSO_AUTH_TOKEN,
+      authToken: token,
     });
     const result = await client.execute("SELECT 1 as test");
-    res.json({ db_url_set: !!process.env.DATABASE_URL, db_token_set: !!process.env.TURSO_AUTH_TOKEN, jwt_secret_set: !!process.env.JWT_SECRET, query_result: result.rows });
+    res.json({ db_url: process.env.DATABASE_URL?.slice(0, 40) + "...", token_prefix: token.slice(0, 20) + "...", token_len: token.length, jwt_secret_set: !!process.env.JWT_SECRET, query_result: result.rows });
   } catch (e: any) {
-    res.json({ db_url_set: !!process.env.DATABASE_URL, db_token_set: !!process.env.TURSO_AUTH_TOKEN, jwt_secret_set: !!process.env.JWT_SECRET, error: e.message, stack: e.stack?.split("\n").slice(0,5).join("\n") });
+    res.json({ db_url: process.env.DATABASE_URL?.slice(0, 40) + "...", token_prefix: token.slice(0, 20) + "...", token_len: token.length, jwt_secret_set: !!process.env.JWT_SECRET, error: e.message, stack: e.stack?.split("\n").slice(0,5).join("\n") });
   }
 });
 

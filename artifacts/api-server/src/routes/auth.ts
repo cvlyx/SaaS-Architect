@@ -57,6 +57,7 @@ router.post("/register", async (req, res) => {
         email: user.email,
         role: user.role,
         organizationId: user.organizationId,
+        industryPackId: org.industryPackId,
         status: user.status,
         avatarUrl: user.avatarUrl,
         phone: user.phone,
@@ -90,6 +91,8 @@ router.post("/login", async (req, res) => {
       return;
     }
 
+    const [org] = await db.select().from(organizationsTable).where(eq(organizationsTable.id, user.organizationId)).limit(1);
+
     const payload: AuthPayload = { userId: user.id, organizationId: user.organizationId, role: user.role };
     const token = generateToken(payload);
 
@@ -101,6 +104,7 @@ router.post("/login", async (req, res) => {
         email: user.email,
         role: user.role,
         organizationId: user.organizationId,
+        industryPackId: org?.industryPackId,
         status: user.status,
         avatarUrl: user.avatarUrl,
         phone: user.phone,
