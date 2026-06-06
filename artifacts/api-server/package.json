@@ -12,6 +12,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@libsql/client": "^0.15.4",
     "@workspace/api-zod": "workspace:*",
     "@workspace/db": "workspace:*",
     "bcryptjs": "^2.4.3",
