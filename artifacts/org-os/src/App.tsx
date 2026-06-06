@@ -21,6 +21,11 @@ import IndustryPacksPage from "@/pages/app/industry-packs";
 import SubscriptionsPage from "@/pages/app/subscriptions";
 import ModulesPage from "@/pages/app/modules";
 
+// Education pages
+import EducationStudents from "@/pages/app/education/students";
+import EducationTeachers from "@/pages/app/education/teachers";
+import EducationClasses from "@/pages/app/education/classes";
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -80,6 +85,11 @@ function Router() {
         <Route path="/app/industry-packs"><ProtectedRoute component={IndustryPacksPage} /></Route>
         <Route path="/app/subscriptions"><ProtectedRoute component={SubscriptionsPage} /></Route>
         <Route path="/app/modules"><ProtectedRoute component={ModulesPage} /></Route>
+
+        {/* Education routes */}
+        <Route path="/app/education/students"><ProtectedRoute component={EducationStudents} /></Route>
+        <Route path="/app/education/teachers"><ProtectedRoute component={EducationTeachers} /></Route>
+        <Route path="/app/education/classes"><ProtectedRoute component={EducationClasses} /></Route>
 
         <Route component={NotFound} />
       </Switch>

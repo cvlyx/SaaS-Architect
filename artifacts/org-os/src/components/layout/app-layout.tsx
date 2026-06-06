@@ -8,6 +8,9 @@ import {
   Package,
   CreditCard,
   Blocks,
+  GraduationCap,
+  BookOpen,
+  UserCheck,
   LogOut,
   Menu,
   Moon,
@@ -36,6 +39,12 @@ const ALL_NAV_ITEMS = [
   { name: "Industry Packs", href: "/app/industry-packs", icon: Package, adminOnly: true },
   { name: "Subscriptions", href: "/app/subscriptions", icon: CreditCard, adminOnly: true },
   { name: "Modules", href: "/app/modules", icon: Blocks, adminOnly: true },
+];
+
+const EDUCATION_NAV_ITEMS = [
+  { name: "Students", href: "/app/education/students", icon: GraduationCap },
+  { name: "Teachers", href: "/app/education/teachers", icon: UserCheck },
+  { name: "Classes", href: "/app/education/classes", icon: BookOpen },
 ];
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
@@ -70,6 +79,31 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           </Link>
         );
       })}
+      {!isSuperAdmin && user?.industryPackId === 3 && (
+        <>
+          <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mt-4 mb-1 px-3">
+            Education
+          </div>
+          {EDUCATION_NAV_ITEMS.map((item) => {
+            const isActive = location === item.href || location.startsWith(item.href + "/");
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setIsMobileNavOpen(false)}
+                className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all ${
+                  isActive
+                    ? "bg-primary text-primary-foreground"
+                    : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                }`}
+              >
+                <item.icon className="h-4 w-4" />
+                {item.name}
+              </Link>
+            );
+          })}
+        </>
+      )}
     </>
   );
 
