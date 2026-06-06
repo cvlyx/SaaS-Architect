@@ -95,8 +95,15 @@ export default function Register() {
           email: form.adminEmail,
           password: form.adminPassword,
           fullName: form.adminName,
-          organizationId: 0,
           role: "admin",
+          organization: {
+            name: form.orgName,
+            type: form.orgType,
+            country: form.orgCountry,
+            city: form.orgCity,
+            size: form.orgSize,
+            industryPackId: form.industryPackId,
+          },
         }),
       });
 

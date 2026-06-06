@@ -1,7 +1,7 @@
 import { Router } from "express";
 import bcrypt from "bcryptjs";
 import { eq } from "drizzle-orm";
-import { db, usersTable } from "@workspace/db";
+import { db, usersTable, organizationsTable } from "@workspace/db";
 import { generateToken } from "../middleware/auth";
 import type { AuthPayload } from "../middleware/auth";
 
@@ -9,7 +9,7 @@ const router = Router();
 
 router.post("/register", async (req, res) => {
   try {
-    const { email, password, fullName, organizationId, role } = req.body;
+    const { email, password, fullName, role, organization } = req.body;
     if (!email || !password || !fullName) {
       res.status(400).json({ error: "email, password, and fullName are required" });
       return;
@@ -23,12 +23,26 @@ router.post("/register", async (req, res) => {
 
     const passwordHash = await bcrypt.hash(password, 10);
 
+    // Create the organization first
+    const trialEnd = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000);
+    const [org] = await db.insert(organizationsTable).values({
+      name: organization?.name || `${fullName}'s Org`,
+      type: organization?.type || "Private",
+      country: organization?.country || "United States",
+      city: organization?.city || "Unknown",
+      size: organization?.size || "1-10",
+      industryPackId: organization?.industryPackId || 1,
+      status: "trial",
+      trialEndsAt: trialEnd.toISOString(),
+    }).returning();
+
+    // Then create the user linked to the organization
     const [user] = await db.insert(usersTable).values({
       fullName,
       email,
       passwordHash,
       role: role || "admin",
-      organizationId: organizationId || 0,
+      organizationId: org.id,
       status: "active",
     }).returning();
 

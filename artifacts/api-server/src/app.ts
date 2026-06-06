@@ -39,8 +39,19 @@ app.use(
   }),
 );
 
+const allowedOrigins = [
+  "http://localhost:5174",
+  "https://saas-architect-ashen.vercel.app",
+  ...(process.env.CORS_ORIGIN ? [process.env.CORS_ORIGIN] : []),
+];
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || "http://localhost:5174",
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true,
 }));
 
