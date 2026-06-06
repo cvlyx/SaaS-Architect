@@ -60,9 +60,10 @@ app.use(express.urlencoded({ extended: true, limit: "1mb" }));
 
 app.use("/api", router);
 
-app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
-  logger.error({ err }, "Unhandled error");
-  res.status(500).json({ error: "Internal server error" });
+app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
+  const status = err.status || err.statusCode || 500;
+  logger.error({ err, message: err.message, stack: err.stack }, "Unhandled error");
+  res.status(status).json({ error: status < 500 ? err.message : "Internal server error" });
 });
 
 export default app;
