@@ -1,5 +1,6 @@
 import { Router } from "express";
 import bcrypt from "bcryptjs";
+import crypto from "crypto";
 import { db, usersTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
 import {
@@ -12,6 +13,30 @@ import {
 } from "@workspace/api-zod";
 
 const router = Router();
+
+router.post("/invite", async (req, res) => {
+  try {
+    const { email, fullName, role, organizationId } = req.body;
+    if (!email || !fullName || !organizationId) {
+      return res.status(400).json({ error: "email, fullName, organizationId required" });
+    }
+    const existing = await db.select().from(usersTable).where(eq(usersTable.email, email));
+    if (existing.length > 0) {
+      return res.status(409).json({ error: "User with this email already exists" });
+    }
+    const token = crypto.randomBytes(32).toString("hex");
+    const [user] = await db.insert(usersTable).values({
+      fullName, email, role: role || "member",
+      organizationId, status: "pending",
+    }).returning();
+    const inviteLink = `${req.protocol}://${req.get("host")}/api/users/accept-invite?token=${token}&userId=${user.id}`;
+    req.log.info({ inviteLink }, "Team invite generated");
+    res.status(201).json({ user, inviteLink });
+  } catch (err: any) {
+    req.log.error({ err }, "Failed to invite user");
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 router.get("/", async (req, res) => {
   const parsed = ListUsersQueryParams.safeParse(req.query);

@@ -41,7 +41,7 @@ export default function Students() {
       const res = await fetch(`${API}/api/education/students?organizationId=${user.organizationId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      if (res.ok) setStudents(await res.json());
+      if (res.ok) { const j = await res.json(); setStudents(Array.isArray(j) ? j : (j.data || [])); }
     } catch { toast.error("Failed to load students"); }
     finally { setLoading(false); }
   }, [user?.organizationId, token]);

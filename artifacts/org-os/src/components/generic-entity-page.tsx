@@ -13,7 +13,7 @@ import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
 import { useAuth } from "@/lib/auth-provider";
-import { Plus, Search, Pencil, Trash2, Loader2 } from "lucide-react";
+import { Plus, Search, Pencil, Trash2, Loader2, Download, ChevronLeft, ChevronRight, Inbox } from "lucide-react";
 
 export interface ColumnDef {
   key: string;
@@ -49,20 +49,36 @@ export function GenericEntityPage({ title, icon, description, entityLabel, apiPa
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState<any | null>(null);
   const [form, setForm] = useState<Record<string, string>>({});
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const pageSize = 15;
   const API = import.meta.env.VITE_API_URL || "http://localhost:3001";
 
   const fetchItems = useCallback(async () => {
     if (!user?.organizationId) return;
     setLoading(true);
     try {
-      const res = await fetch(`${API}${apiPath}?organizationId=${user.organizationId}`, {
+      const res = await fetch(`${API}${apiPath}?organizationId=${user.organizationId}&page=${page}&pageSize=${pageSize}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      if (res.ok) setItems(await res.json());
+      if (res.ok) {
+        const json = await res.json();
+        if (Array.isArray(json)) {
+          setItems(json);
+          setTotal(json.length);
+          setTotalPages(1);
+        } else {
+          setItems(json.data || []);
+          setTotal(json.total || 0);
+          setTotalPages(json.totalPages || 1);
+        }
+      }
     } catch { toast.error(`Failed to load ${entityLabel.toLowerCase()}s`); }
     finally { setLoading(false); }
-  }, [user?.organizationId, token, apiPath, entityLabel]);
+  }, [user?.organizationId, token, apiPath, entityLabel, page]);
 
+  useEffect(() => { setPage(1); }, [search]);
   useEffect(() => { fetchItems(); }, [fetchItems]);
 
   useEffect(() => {
@@ -103,6 +119,20 @@ export function GenericEntityPage({ title, icon, description, entityLabel, apiPa
     formFields.forEach(f => { vals[f.key] = String(item[f.key] ?? ""); });
     setForm(vals);
     setDialogOpen(true);
+  };
+
+  const exportCSV = () => {
+    const headers = columns.map(c => c.header);
+    const rows = items.map(item => columns.map(c => String(item[c.key] ?? "")).join(","));
+    const csv = [headers.join(","), ...rows].join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${entityLabel.toLowerCase()}s.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success("CSV exported");
   };
 
   const filtered = items.filter(item => {
@@ -156,9 +186,16 @@ export function GenericEntityPage({ title, icon, description, entityLabel, apiPa
         </Dialog>
       </div>
 
-      <div className="relative w-full md:w-72">
-        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-        <Input placeholder={`Search ${entityLabel.toLowerCase()}s...`} className="pl-8" value={search} onChange={e => setSearch(e.target.value)} />
+      <div className="flex items-center gap-3 flex-wrap">
+        <div className="relative w-full md:w-72">
+          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Input placeholder={`Search ${entityLabel.toLowerCase()}s...`} className="pl-8" value={search} onChange={e => setSearch(e.target.value)} />
+        </div>
+        {items.length > 0 && (
+          <Button variant="outline" size="sm" onClick={exportCSV}>
+            <Download className="h-4 w-4 mr-1.5" /> Export CSV
+          </Button>
+        )}
       </div>
 
       <Card>
@@ -172,9 +209,22 @@ export function GenericEntityPage({ title, icon, description, entityLabel, apiPa
             </TableHeader>
             <TableBody>
               {loading ? (
-                <TableRow><TableCell colSpan={columns.length + 1} className="text-center py-8"><Loader2 className="h-6 w-6 animate-spin mx-auto" /></TableCell></TableRow>
+                <TableRow><TableCell colSpan={columns.length + 1} className="text-center py-16"><Loader2 className="h-8 w-8 animate-spin mx-auto text-muted-foreground" /></TableCell></TableRow>
               ) : filtered.length === 0 ? (
-                <TableRow><TableCell colSpan={columns.length + 1} className="text-center py-8 text-muted-foreground">No {entityLabel.toLowerCase()}s found</TableCell></TableRow>
+                <TableRow>
+                  <TableCell colSpan={columns.length + 1} className="text-center py-16">
+                    <div className="flex flex-col items-center gap-3 text-muted-foreground">
+                      <Inbox className="h-12 w-12" />
+                      <div>
+                        <p className="text-lg font-medium">No {entityLabel.toLowerCase()}s yet</p>
+                        <p className="text-sm">Get started by adding your first {entityLabel.toLowerCase()}.</p>
+                      </div>
+                      <Button onClick={() => { setEditing(null); setForm({}); setDialogOpen(true); }}>
+                        <Plus className="h-4 w-4 mr-1.5" /> Add {entityLabel}
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
               ) : filtered.map((item: any) => (
                 <TableRow key={item.id}>
                   {columns.map(col => (
@@ -194,6 +244,21 @@ export function GenericEntityPage({ title, icon, description, entityLabel, apiPa
           </Table>
         </CardContent>
       </Card>
+
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between text-sm text-muted-foreground">
+          <span>{total} {entityLabel.toLowerCase()}s total</span>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => setPage(p => Math.max(1, p - 1))}>
+              <ChevronLeft className="h-4 w-4" /> Previous
+            </Button>
+            <span className="px-2">Page {page} of {totalPages}</span>
+            <Button variant="outline" size="sm" disabled={page >= totalPages} onClick={() => setPage(p => p + 1)}>
+              Next <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

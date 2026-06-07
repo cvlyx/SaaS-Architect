@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { db } from "@workspace/db";
-import { eq, count } from "drizzle-orm";
+import { eq, count, sql } from "drizzle-orm";
 import {
   healthcarePatients, healthcareStaff, healthcareAppointments,
   constructionProjects, constructionWorkers, constructionSafetyReports,
@@ -25,10 +25,19 @@ function crud(table: any, requiredFields: string[], orderCol?: any, label?: stri
   router.get("/", async (req, res) => {
     try {
       const orgId = Number(req.query.organizationId);
+      const page = Math.max(1, Number(req.query.page) || 1);
+      const pageSize = Math.min(100, Math.max(1, Number(req.query.pageSize) || 50));
+      const offset = (page - 1) * pageSize;
       let q: any = db.select().from(table);
-      if (orgId) q = q.where(eq(table.organizationId, orgId));
-      const rows = orderCol ? await q.orderBy(orderCol) : await q;
-      res.json(rows);
+      let countQ: any = db.select({ total: count() }).from(table);
+      if (orgId) {
+        q = q.where(eq(table.organizationId, orgId));
+        countQ = countQ.where(eq(table.organizationId, orgId));
+      }
+      let rows = orderCol ? await q.orderBy(orderCol).limit(pageSize).offset(offset) : await q.limit(pageSize).offset(offset);
+      const [totalResult] = await countQ;
+      const total = Number(totalResult?.total ?? 0);
+      res.json({ data: rows, total, page, pageSize, totalPages: Math.ceil(total / pageSize) });
     } catch (err: any) { req.log.error({ err }, `Failed to list ${name}`); res.status(500).json({ error: "Internal server error" }); }
   });
 

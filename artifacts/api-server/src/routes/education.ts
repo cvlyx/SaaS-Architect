@@ -17,10 +17,19 @@ const router = Router();
 router.get("/students", async (req, res) => {
   try {
     const orgId = Number(req.query.organizationId);
+    const page = Math.max(1, Number(req.query.page) || 1);
+    const pageSize = Math.min(100, Math.max(1, Number(req.query.pageSize) || 50));
+    const offset = (page - 1) * pageSize;
     let query = db.select().from(educationStudents);
-    if (orgId) query = query.where(eq(educationStudents.organizationId, orgId)) as typeof query;
-    const rows = await query.orderBy(educationStudents.lastName);
-    res.json(rows);
+    let countQ = db.select({ total: count() }).from(educationStudents);
+    if (orgId) {
+      query = query.where(eq(educationStudents.organizationId, orgId)) as typeof query;
+      countQ = countQ.where(eq(educationStudents.organizationId, orgId));
+    }
+    const rows = await query.orderBy(educationStudents.lastName).limit(pageSize).offset(offset);
+    const [totalResult] = await countQ;
+    const total = Number(totalResult?.total ?? 0);
+    res.json({ data: rows, total, page, pageSize, totalPages: Math.ceil(total / pageSize) });
   } catch (err) { req.log.error({ err }, "Failed to list students"); res.status(500).json({ error: "Internal server error" }); }
 });
 
@@ -60,10 +69,19 @@ router.delete("/students/:id", async (req, res) => {
 router.get("/teachers", async (req, res) => {
   try {
     const orgId = Number(req.query.organizationId);
+    const page = Math.max(1, Number(req.query.page) || 1);
+    const pageSize = Math.min(100, Math.max(1, Number(req.query.pageSize) || 50));
+    const offset = (page - 1) * pageSize;
     let query = db.select().from(educationTeachers);
-    if (orgId) query = query.where(eq(educationTeachers.organizationId, orgId)) as typeof query;
-    const rows = await query.orderBy(educationTeachers.lastName);
-    res.json(rows);
+    let countQ = db.select({ total: count() }).from(educationTeachers);
+    if (orgId) {
+      query = query.where(eq(educationTeachers.organizationId, orgId)) as typeof query;
+      countQ = countQ.where(eq(educationTeachers.organizationId, orgId));
+    }
+    const rows = await query.orderBy(educationTeachers.lastName).limit(pageSize).offset(offset);
+    const [totalResult] = await countQ;
+    const total = Number(totalResult?.total ?? 0);
+    res.json({ data: rows, total, page, pageSize, totalPages: Math.ceil(total / pageSize) });
   } catch (err) { req.log.error({ err }, "Failed to list teachers"); res.status(500).json({ error: "Internal server error" }); }
 });
 
@@ -103,10 +121,19 @@ router.delete("/teachers/:id", async (req, res) => {
 router.get("/classes", async (req, res) => {
   try {
     const orgId = Number(req.query.organizationId);
+    const page = Math.max(1, Number(req.query.page) || 1);
+    const pageSize = Math.min(100, Math.max(1, Number(req.query.pageSize) || 50));
+    const offset = (page - 1) * pageSize;
     let query = db.select().from(educationClasses);
-    if (orgId) query = query.where(eq(educationClasses.organizationId, orgId)) as typeof query;
-    const rows = await query.orderBy(educationClasses.name);
-    res.json(rows);
+    let countQ = db.select({ total: count() }).from(educationClasses);
+    if (orgId) {
+      query = query.where(eq(educationClasses.organizationId, orgId)) as typeof query;
+      countQ = countQ.where(eq(educationClasses.organizationId, orgId));
+    }
+    const rows = await query.orderBy(educationClasses.name).limit(pageSize).offset(offset);
+    const [totalResult] = await countQ;
+    const total = Number(totalResult?.total ?? 0);
+    res.json({ data: rows, total, page, pageSize, totalPages: Math.ceil(total / pageSize) });
   } catch (err) { req.log.error({ err }, "Failed to list classes"); res.status(500).json({ error: "Internal server error" }); }
 });
 

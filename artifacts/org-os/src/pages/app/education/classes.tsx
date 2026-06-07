@@ -34,8 +34,8 @@ export default function Classes() {
         fetch(`${API}/api/education/classes?organizationId=${user.organizationId}`, h),
         fetch(`${API}/api/education/teachers?organizationId=${user.organizationId}`, h),
       ]);
-      if (cRes.ok) setClasses(await cRes.json());
-      if (tRes.ok) setTeachers(await tRes.json());
+      if (cRes.ok) { const j = await cRes.json(); setClasses(Array.isArray(j) ? j : (j.data || [])); }
+      if (tRes.ok) { const j = await tRes.json(); setTeachers(Array.isArray(j) ? j : (j.data || [])); }
     } catch { toast.error("Failed to load classes"); }
     finally { setLoading(false); }
   }, [user?.organizationId, token]);

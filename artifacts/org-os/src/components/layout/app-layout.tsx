@@ -51,8 +51,8 @@ import { Input } from "@/components/ui/input";
 
 const ALL_NAV_ITEMS = [
   { name: "Dashboard", href: "/app", icon: LayoutDashboard, adminOnly: false },
+  { name: "Team", href: "/app/users", icon: Users, adminOnly: false },
   { name: "Organizations", href: "/app/organizations", icon: Building2, adminOnly: true },
-  { name: "Users", href: "/app/users", icon: Users, adminOnly: true },
   { name: "Industry Packs", href: "/app/industry-packs", icon: Package, adminOnly: true },
   { name: "Subscriptions", href: "/app/subscriptions", icon: CreditCard, adminOnly: true },
   { name: "Modules", href: "/app/modules", icon: Blocks, adminOnly: true },

@@ -32,7 +32,7 @@ export default function Teachers() {
       const res = await fetch(`${API}/api/education/teachers?organizationId=${user.organizationId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      if (res.ok) setTeachers(await res.json());
+      if (res.ok) { const j = await res.json(); setTeachers(Array.isArray(j) ? j : (j.data || [])); }
     } catch { toast.error("Failed to load teachers"); }
     finally { setLoading(false); }
   }, [user?.organizationId, token]);

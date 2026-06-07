@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Building2, Users, LayoutDashboard, Zap, Shield, Globe,
-  CheckCircle2, ArrowRight, Star, Menu, X, ChevronRight, Sun, Moon
+  CheckCircle2, ArrowRight, Star, Menu, X, ChevronRight, Sun, Moon, Rocket
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useTheme } from "@/lib/theme-provider";
@@ -179,6 +179,23 @@ export default function Landing() {
               </div>
               <p className="mt-4 text-sm text-muted-foreground">No credit card required · 14-day free trial · Cancel anytime</p>
             </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Demo callout */}
+      <section className="border-y bg-background py-6">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-sm">
+            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary font-medium">
+              <Rocket className="h-4 w-4" /> Try instantly
+            </div>
+            <span className="text-muted-foreground">
+              Use <code className="px-1.5 py-0.5 rounded bg-muted font-mono text-xs">demo@healthcare.com</code> / <code className="px-1.5 py-0.5 rounded bg-muted font-mono text-xs">password123</code>
+            </span>
+            <Link href="/login">
+              <Button variant="link" size="sm" className="text-primary gap-1">Launch demo <ArrowRight className="h-3 w-3" /></Button>
+            </Link>
           </div>
         </div>
       </section>
@@ -452,6 +469,43 @@ export default function Landing() {
                     </div>
                   </CardContent>
                 </Card>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="py-20 sm:py-28 bg-muted/20">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="text-center mb-12"
+          >
+            <Badge variant="outline" className="mb-4">FAQ</Badge>
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Frequently asked questions</h2>
+          </motion.div>
+          <div className="space-y-4">
+            {[
+              { q: "How does the free trial work?", a: "Sign up for a 14-day free trial with no credit card required. You get full access to your chosen industry pack and all platform features. No commitment, cancel anytime." },
+              { q: "Can I switch industry packs later?", a: "Yes. You can switch packs at any time. Your data is preserved, and the new pack's templates and workflows become available immediately." },
+              { q: "What kind of support is available?", a: "All plans include email support with 4-hour response time. Growth and Enterprise plans include priority support and a dedicated account manager." },
+              { q: "Is my data secure?", a: "Yes. We use SOC2-compliant infrastructure with encryption at rest and in transit. Your data is isolated per organization and never shared." },
+              { q: "Can I try it before signing up?", a: "Absolutely. Use demo@healthcare.com / password123 to explore the healthcare pack, or demo@tech.com for the technology pack. No account needed." },
+            ].map(({ q, a }, i) => (
+              <motion.div
+                key={q}
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.3, delay: i * 0.05 }}
+                className="rounded-xl border bg-card p-5"
+              >
+                <h3 className="font-semibold mb-1.5">{q}</h3>
+                <p className="text-sm text-muted-foreground">{a}</p>
               </motion.div>
             ))}
           </div>
