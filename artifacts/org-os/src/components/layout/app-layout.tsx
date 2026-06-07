@@ -15,11 +15,19 @@ import {
   HardHat,
   ShoppingCart,
   Monitor,
-  Landmark,
+  Landmark as FinanceIcon,
   Stethoscope,
   FileWarning,
   CheckSquare,
   ArrowRightLeft,
+  Heart,
+  Scale,
+  Factory,
+  Building,
+  Hotel,
+  Truck,
+  Newspaper,
+  Briefcase,
   LogOut,
   Menu,
   Moon,
@@ -76,10 +84,55 @@ const INDUSTRY_CONFIG: Record<number, { name: string; icon: any; items: { name: 
     { name: "Tasks", href: "/app/technology/tasks", icon: CheckSquare },
     { name: "Members", href: "/app/technology/team-members", icon: Users },
   ]},
-  6: { name: "Finance", icon: Landmark, items: [
-    { name: "Accounts", href: "/app/finance/accounts", icon: Landmark },
+  6: { name: "Finance", icon: FinanceIcon, items: [
+    { name: "Accounts", href: "/app/finance/accounts", icon: FinanceIcon },
     { name: "Transactions", href: "/app/finance/transactions", icon: ArrowRightLeft },
     { name: "Budgets", href: "/app/finance/budgets", icon: CreditCard },
+  ]},
+  19: { name: "Non-Profit", icon: Heart, items: [
+    { name: "Donors", href: "/app/non-profit/donors", icon: Heart },
+    { name: "Donations", href: "/app/non-profit/donations", icon: CreditCard },
+    { name: "Campaigns", href: "/app/non-profit/campaigns", icon: Package },
+  ]},
+  20: { name: "Legal", icon: Scale, items: [
+    { name: "Clients", href: "/app/legal/clients", icon: Users },
+    { name: "Cases", href: "/app/legal/cases", icon: Scale },
+    { name: "Documents", href: "/app/legal/documents", icon: FileWarning },
+  ]},
+  23: { name: "Manufacturing", icon: Factory, items: [
+    { name: "Products", href: "/app/manufacturing/products", icon: Package },
+    { name: "Production Runs", href: "/app/manufacturing/production-runs", icon: Factory },
+    { name: "Suppliers", href: "/app/manufacturing/suppliers", icon: Truck },
+  ]},
+  24: { name: "Real Estate", icon: Building, items: [
+    { name: "Properties", href: "/app/real-estate/properties", icon: Building },
+    { name: "Clients", href: "/app/real-estate/clients", icon: Users },
+    { name: "Leases", href: "/app/real-estate/leases", icon: CreditCard },
+  ]},
+  25: { name: "Hospitality", icon: Hotel, items: [
+    { name: "Rooms", href: "/app/hospitality/rooms", icon: Hotel },
+    { name: "Guests", href: "/app/hospitality/guests", icon: Users },
+    { name: "Bookings", href: "/app/hospitality/bookings", icon: CreditCard },
+  ]},
+  26: { name: "Transportation", icon: Truck, items: [
+    { name: "Vehicles", href: "/app/transportation/vehicles", icon: Truck },
+    { name: "Drivers", href: "/app/transportation/drivers", icon: Users },
+    { name: "Shipments", href: "/app/transportation/shipments", icon: Package },
+  ]},
+  27: { name: "Media", icon: Newspaper, items: [
+    { name: "Articles", href: "/app/media/articles", icon: Newspaper },
+    { name: "Assets", href: "/app/media/assets", icon: Package },
+    { name: "Campaigns", href: "/app/media/campaigns", icon: CreditCard },
+  ]},
+  28: { name: "Consulting", icon: Briefcase, items: [
+    { name: "Clients", href: "/app/consulting/clients", icon: Users },
+    { name: "Consultants", href: "/app/consulting/consultants", icon: Briefcase },
+    { name: "Engagements", href: "/app/consulting/engagements", icon: CreditCard },
+  ]},
+  29: { name: "Government", icon: Building2, items: [
+    { name: "Citizens", href: "/app/government/citizens", icon: Users },
+    { name: "Permits", href: "/app/government/permits", icon: FileWarning },
+    { name: "Service Requests", href: "/app/government/service-requests", icon: Package },
   ]},
 };
 

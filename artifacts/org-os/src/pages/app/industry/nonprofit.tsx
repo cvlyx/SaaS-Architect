@@ -1,0 +1,13 @@
+import { Heart, CreditCard, Package } from "lucide-react";
+import { GenericEntityPage, type ColumnDef, type FormFieldDef } from "@/components/generic-entity-page";
+const BASE = "/api/industries/non-profit";
+const S = [{ value: "active", label: "Active" }, { value: "inactive", label: "Inactive" }];
+const dc: ColumnDef[] = [{key:"lastName",header:"Name",render:(_,r)=>`${r.lastName}, ${r.firstName}`},{key:"email",header:"Email"},{key:"totalDonations",header:"Total",render:v=>v?`$${Number(v).toLocaleString()}`:"$0"},{key:"status",header:"Status"}];
+const df: FormFieldDef[] = [{key:"firstName",label:"First Name",required:true},{key:"lastName",label:"Last Name",required:true},{key:"email",label:"Email",type:"email"},{key:"phone",label:"Phone",type:"tel"},{key:"status",label:"Status",type:"select",options:S,defaultValue:"active"}];
+const dnc: ColumnDef[] = [{key:"date",header:"Date"},{key:"amount",header:"Amount",render:v=>`$${Number(v).toLocaleString()}`},{key:"campaign",header:"Campaign"},{key:"donorId",header:"Donor ID"}];
+const dnf: FormFieldDef[] = [{key:"donorId",label:"Donor ID",type:"number",required:true},{key:"amount",label:"Amount",type:"number",required:true},{key:"date",label:"Date",type:"date",required:true},{key:"campaign",label:"Campaign"},{key:"notes",label:"Notes"}];
+const cc: ColumnDef[] = [{key:"name",header:"Campaign"},{key:"goal",header:"Goal",render:v=>`$${Number(v).toLocaleString()}`},{key:"raised",header:"Raised",render:v=>`$${Number(v).toLocaleString()}`},{key:"status",header:"Status"}];
+const cf: FormFieldDef[] = [{key:"name",label:"Name",required:true},{key:"goal",label:"Goal",type:"number",required:true},{key:"startDate",label:"Start Date",type:"date"},{key:"endDate",label:"End Date",type:"date"},{key:"status",label:"Status",type:"select",options:S,defaultValue:"active"}];
+export function NonprofitDonors() { return <GenericEntityPage title="Donors" icon={<Heart className="h-8 w-8 text-pink-500"/>} description="Manage donors" entityLabel="Donor" apiPath={`${BASE}/donors`} columns={dc} formFields={df} searchFields={["firstName","lastName","email"]}/>; }
+export function NonprofitDonations() { return <GenericEntityPage title="Donations" icon={<CreditCard className="h-8 w-8 text-pink-500"/>} description="Track donations" entityLabel="Donation" apiPath={`${BASE}/donations`} columns={dnc} formFields={dnf} searchFields={["campaign"]}/>; }
+export function NonprofitCampaigns() { return <GenericEntityPage title="Campaigns" icon={<Package className="h-8 w-8 text-pink-500"/>} description="Manage fundraising campaigns" entityLabel="Campaign" apiPath={`${BASE}/campaigns`} columns={cc} formFields={cf} searchFields={["name"]}/>; }

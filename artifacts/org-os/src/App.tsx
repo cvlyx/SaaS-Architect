@@ -32,6 +32,15 @@ import { ConstructionProjects, ConstructionWorkers, ConstructionSafetyReports } 
 import { RetailProducts, RetailInventory, RetailCustomers } from "@/pages/app/industry/retail";
 import { TechnologyProjects, TechnologyTasks, TechnologyTeamMembers } from "@/pages/app/industry/technology";
 import { FinanceAccounts, FinanceTransactions, FinanceBudgets } from "@/pages/app/industry/finance";
+import { NonprofitDonors, NonprofitDonations, NonprofitCampaigns } from "@/pages/app/industry/nonprofit";
+import { LegalClients, LegalCases, LegalDocuments } from "@/pages/app/industry/legal";
+import { ManufacturingProducts, ManufacturingProductionRuns, ManufacturingSuppliers } from "@/pages/app/industry/manufacturing";
+import { RealEstateProperties, RealEstateClients, RealEstateLeases } from "@/pages/app/industry/realestate";
+import { HospitalityRooms, HospitalityGuests, HospitalityBookings } from "@/pages/app/industry/hospitality";
+import { TransportationVehicles, TransportationDrivers, TransportationShipments } from "@/pages/app/industry/transportation";
+import { MediaArticles, MediaAssets, MediaCampaigns } from "@/pages/app/industry/media";
+import { ConsultingClients, ConsultingConsultants, ConsultingEngagements } from "@/pages/app/industry/consulting";
+import { GovernmentCitizens, GovernmentPermits, GovernmentServiceRequests } from "@/pages/app/industry/government";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -122,6 +131,51 @@ function Router() {
         <Route path="/app/finance/accounts"><ProtectedRoute component={FinanceAccounts} /></Route>
         <Route path="/app/finance/transactions"><ProtectedRoute component={FinanceTransactions} /></Route>
         <Route path="/app/finance/budgets"><ProtectedRoute component={FinanceBudgets} /></Route>
+
+        {/* Non-Profit routes */}
+        <Route path="/app/non-profit/donors"><ProtectedRoute component={NonprofitDonors} /></Route>
+        <Route path="/app/non-profit/donations"><ProtectedRoute component={NonprofitDonations} /></Route>
+        <Route path="/app/non-profit/campaigns"><ProtectedRoute component={NonprofitCampaigns} /></Route>
+
+        {/* Legal routes */}
+        <Route path="/app/legal/clients"><ProtectedRoute component={LegalClients} /></Route>
+        <Route path="/app/legal/cases"><ProtectedRoute component={LegalCases} /></Route>
+        <Route path="/app/legal/documents"><ProtectedRoute component={LegalDocuments} /></Route>
+
+        {/* Manufacturing routes */}
+        <Route path="/app/manufacturing/products"><ProtectedRoute component={ManufacturingProducts} /></Route>
+        <Route path="/app/manufacturing/production-runs"><ProtectedRoute component={ManufacturingProductionRuns} /></Route>
+        <Route path="/app/manufacturing/suppliers"><ProtectedRoute component={ManufacturingSuppliers} /></Route>
+
+        {/* Real Estate routes */}
+        <Route path="/app/real-estate/properties"><ProtectedRoute component={RealEstateProperties} /></Route>
+        <Route path="/app/real-estate/clients"><ProtectedRoute component={RealEstateClients} /></Route>
+        <Route path="/app/real-estate/leases"><ProtectedRoute component={RealEstateLeases} /></Route>
+
+        {/* Hospitality routes */}
+        <Route path="/app/hospitality/rooms"><ProtectedRoute component={HospitalityRooms} /></Route>
+        <Route path="/app/hospitality/guests"><ProtectedRoute component={HospitalityGuests} /></Route>
+        <Route path="/app/hospitality/bookings"><ProtectedRoute component={HospitalityBookings} /></Route>
+
+        {/* Transportation routes */}
+        <Route path="/app/transportation/vehicles"><ProtectedRoute component={TransportationVehicles} /></Route>
+        <Route path="/app/transportation/drivers"><ProtectedRoute component={TransportationDrivers} /></Route>
+        <Route path="/app/transportation/shipments"><ProtectedRoute component={TransportationShipments} /></Route>
+
+        {/* Media routes */}
+        <Route path="/app/media/articles"><ProtectedRoute component={MediaArticles} /></Route>
+        <Route path="/app/media/assets"><ProtectedRoute component={MediaAssets} /></Route>
+        <Route path="/app/media/campaigns"><ProtectedRoute component={MediaCampaigns} /></Route>
+
+        {/* Consulting routes */}
+        <Route path="/app/consulting/clients"><ProtectedRoute component={ConsultingClients} /></Route>
+        <Route path="/app/consulting/consultants"><ProtectedRoute component={ConsultingConsultants} /></Route>
+        <Route path="/app/consulting/engagements"><ProtectedRoute component={ConsultingEngagements} /></Route>
+
+        {/* Government routes */}
+        <Route path="/app/government/citizens"><ProtectedRoute component={GovernmentCitizens} /></Route>
+        <Route path="/app/government/permits"><ProtectedRoute component={GovernmentPermits} /></Route>
+        <Route path="/app/government/service-requests"><ProtectedRoute component={GovernmentServiceRequests} /></Route>
 
         <Route component={NotFound} />
       </Switch>

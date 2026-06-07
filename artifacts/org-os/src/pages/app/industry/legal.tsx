@@ -1,0 +1,13 @@
+import { Users, Scale, FileWarning } from "lucide-react";
+import { GenericEntityPage, type ColumnDef, type FormFieldDef } from "@/components/generic-entity-page";
+const BASE = "/api/industries/legal";
+const S = [{ value: "active", label: "Active" }, { value: "inactive", label: "Inactive" }];
+const cc: ColumnDef[] = [{key:"lastName",header:"Name",render:(_,r)=>`${r.lastName}, ${r.firstName}`},{key:"email",header:"Email"},{key:"status",header:"Status"}];
+const cf: FormFieldDef[] = [{key:"firstName",label:"First Name",required:true},{key:"lastName",label:"Last Name",required:true},{key:"email",label:"Email",type:"email"},{key:"phone",label:"Phone",type:"tel"},{key:"status",label:"Status",type:"select",options:S,defaultValue:"active"}];
+const cac: ColumnDef[] = [{key:"title",header:"Case"},{key:"type",header:"Type"},{key:"clientId",header:"Client ID"},{key:"status",header:"Status"}];
+const caf: FormFieldDef[] = [{key:"clientId",label:"Client ID",type:"number",required:true},{key:"title",label:"Title",required:true},{key:"type",label:"Type",required:true},{key:"status",label:"Status",type:"select",options:[...S,{value:"open",label:"Open"},{value:"closed",label:"Closed"},{value:"pending",label:"Pending"}],defaultValue:"open"}];
+const dc: ColumnDef[] = [{key:"title",header:"Document"},{key:"type",header:"Type"},{key:"caseId",header:"Case ID"},{key:"status",header:"Status"}];
+const df: FormFieldDef[] = [{key:"caseId",label:"Case ID",type:"number",required:true},{key:"title",label:"Title",required:true},{key:"type",label:"Type",required:true},{key:"filedBy",label:"Filed By"},{key:"status",label:"Status",type:"select",options:[{value:"draft",label:"Draft"},{value:"filed",label:"Filed"},{value:"approved",label:"Approved"}],defaultValue:"draft"}];
+export function LegalClients() { return <GenericEntityPage title="Clients" icon={<Users className="h-8 w-8 text-indigo-500"/>} description="Manage legal clients" entityLabel="Client" apiPath={`${BASE}/clients`} columns={cc} formFields={cf} searchFields={["firstName","lastName","email"]}/>; }
+export function LegalCases() { return <GenericEntityPage title="Cases" icon={<Scale className="h-8 w-8 text-indigo-500"/>} description="Manage legal cases" entityLabel="Case" apiPath={`${BASE}/cases`} columns={cac} formFields={caf} searchFields={["title","type","status"]}/>; }
+export function LegalDocuments() { return <GenericEntityPage title="Documents" icon={<FileWarning className="h-8 w-8 text-indigo-500"/>} description="Manage legal documents" entityLabel="Document" apiPath={`${BASE}/documents`} columns={dc} formFields={df} searchFields={["title","type","status"]}/>; }

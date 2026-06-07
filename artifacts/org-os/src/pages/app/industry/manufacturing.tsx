@@ -1,0 +1,13 @@
+import { Package, Factory, Truck } from "lucide-react";
+import { GenericEntityPage, type ColumnDef, type FormFieldDef } from "@/components/generic-entity-page";
+const BASE = "/api/industries/manufacturing";
+const S = [{ value: "active", label: "Active" }, { value: "inactive", label: "Inactive" }];
+const pc: ColumnDef[] = [{key:"name",header:"Product"},{key:"sku",header:"SKU"},{key:"unitCost",header:"Unit Cost",render:v=>v?`$${Number(v).toFixed(2)}`:"—"},{key:"status",header:"Status"}];
+const pf: FormFieldDef[] = [{key:"name",label:"Name",required:true},{key:"sku",label:"SKU"},{key:"description",label:"Description"},{key:"unitCost",label:"Unit Cost",type:"number"},{key:"status",label:"Status",type:"select",options:S,defaultValue:"active"}];
+const prc: ColumnDef[] = [{key:"productId",header:"Product ID"},{key:"quantity",header:"Qty"},{key:"startDate",header:"Start"},{key:"status",header:"Status"}];
+const prf: FormFieldDef[] = [{key:"productId",label:"Product ID",type:"number",required:true},{key:"quantity",label:"Quantity",type:"number",required:true},{key:"startDate",label:"Start Date",type:"date"},{key:"endDate",label:"End Date",type:"date"},{key:"status",label:"Status",type:"select",options:[{value:"planned",label:"Planned"},{value:"in_progress",label:"In Progress"},{value:"completed",label:"Completed"}],defaultValue:"planned"}];
+const sc: ColumnDef[] = [{key:"name",header:"Supplier"},{key:"contact",header:"Contact"},{key:"leadTime",header:"Lead (days)"},{key:"status",header:"Status"}];
+const sf: FormFieldDef[] = [{key:"name",label:"Name",required:true},{key:"contact",label:"Contact"},{key:"email",label:"Email",type:"email"},{key:"phone",label:"Phone",type:"tel"},{key:"leadTime",label:"Lead Time (days)",type:"number"},{key:"status",label:"Status",type:"select",options:S,defaultValue:"active"}];
+export function ManufacturingProducts() { return <GenericEntityPage title="Products" icon={<Package className="h-8 w-8 text-yellow-700"/>} description="Manage manufactured products" entityLabel="Product" apiPath={`${BASE}/products`} columns={pc} formFields={pf} searchFields={["name","sku"]}/>; }
+export function ManufacturingProductionRuns() { return <GenericEntityPage title="Production Runs" icon={<Factory className="h-8 w-8 text-yellow-700"/>} description="Schedule production runs" entityLabel="Production Run" apiPath={`${BASE}/production-runs`} columns={prc} formFields={prf} searchFields={["status"]}/>; }
+export function ManufacturingSuppliers() { return <GenericEntityPage title="Suppliers" icon={<Truck className="h-8 w-8 text-yellow-700"/>} description="Manage suppliers" entityLabel="Supplier" apiPath={`${BASE}/suppliers`} columns={sc} formFields={sf} searchFields={["name","contact"]}/>; }
