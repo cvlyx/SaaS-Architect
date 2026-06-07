@@ -1,7 +1,7 @@
 import { useIndustryStats } from "@/lib/use-industry-stats";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { motion } from "framer-motion";
-import { Loader2, TrendingUp } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { TrendingUp } from "lucide-react";
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend,
 } from "recharts";
@@ -25,18 +25,9 @@ const CARD_STYLES: Record<string, string> = {
 };
 
 const ICON_COLORS: Record<string, string> = {
-  red: "text-red-500",
-  blue: "text-blue-500",
-  green: "text-green-500",
-  amber: "text-amber-500",
-  purple: "text-purple-500",
-  teal: "text-teal-500",
-  orange: "text-orange-500",
-  yellow: "text-yellow-500",
-  pink: "text-pink-500",
-  cyan: "text-cyan-500",
-  emerald: "text-emerald-500",
-  rose: "text-rose-500",
+  red: "text-red-500", blue: "text-blue-500", green: "text-green-500", amber: "text-amber-500",
+  purple: "text-purple-500", teal: "text-teal-500", orange: "text-orange-500", yellow: "text-yellow-500",
+  pink: "text-pink-500", cyan: "text-cyan-500", emerald: "text-emerald-500", rose: "text-rose-500",
   indigo: "text-indigo-500",
 };
 
@@ -58,15 +49,6 @@ interface Props {
 export function IndustryDashboardShell({ icon: Icon, title, description, slug, stats }: Props) {
   const { data, loading } = useIndustryStats(slug);
 
-  const containerVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { staggerChildren: 0.1 } },
-  };
-  const itemVariants = {
-    hidden: { opacity: 0, y: 10 },
-    visible: { opacity: 1, y: 0 },
-  };
-
   const chartData = stats.map((s, i) => ({
     name: s.label,
     value: data ? (data[s.key] ?? 0) : 0,
@@ -75,7 +57,7 @@ export function IndustryDashboardShell({ icon: Icon, title, description, slug, s
   const hasData = data && Object.values(data).some(v => v > 0);
 
   return (
-    <motion.div variants={containerVariants} initial="hidden" animate="visible" className="space-y-6">
+    <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold tracking-tight flex items-center gap-3">
           <Icon className="h-8 w-8" />
@@ -85,28 +67,36 @@ export function IndustryDashboardShell({ icon: Icon, title, description, slug, s
       </div>
 
       {loading ? (
-        <div className="flex justify-center py-16"><Loader2 className="h-8 w-8 animate-spin text-muted-foreground" /></div>
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {stats.map(s => (
+            <Card key={s.key}>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-4 w-4" />
+              </CardHeader>
+              <CardContent><Skeleton className="h-8 w-16" /></CardContent>
+            </Card>
+          ))}
+        </div>
       ) : (
         <>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            {stats.map((s, i) => (
-              <motion.div key={s.key} variants={itemVariants}>
-                <Card className={CARD_STYLES[s.color] || "border"}>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">{s.label}</CardTitle>
-                    <s.icon className={`h-4 w-4 ${ICON_COLORS[s.color] || ""}`} />
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold">{data?.[s.key] ?? 0}</div>
-                    {data && data[s.key] > 0 && (
-                      <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1">
-                        <TrendingUp className="h-3 w-3 text-green-500" />
-                        Total records
-                      </p>
-                    )}
-                  </CardContent>
-                </Card>
-              </motion.div>
+            {stats.map(s => (
+              <Card key={s.key} className={CARD_STYLES[s.color] || "border"}>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">{s.label}</CardTitle>
+                  <s.icon className={`h-4 w-4 ${ICON_COLORS[s.color] || ""}`} />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{data?.[s.key] ?? 0}</div>
+                  {data && data[s.key] > 0 && (
+                    <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1">
+                      <TrendingUp className="h-3 w-3 text-green-500" />
+                      Total records
+                    </p>
+                  )}
+                </CardContent>
+              </Card>
             ))}
           </div>
 
@@ -137,10 +127,9 @@ export function IndustryDashboardShell({ icon: Icon, title, description, slug, s
                 {hasData ? (
                   <ResponsiveContainer width="100%" height={280}>
                     <PieChart>
-                      <Pie data={chartData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={100} label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}>
+                      <Pie data={chartData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} labelLine={false}>
                         {chartData.map((_, i) => <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />)}
                       </Pie>
-                      <Tooltip />
                       <Legend />
                     </PieChart>
                   </ResponsiveContainer>
@@ -152,6 +141,6 @@ export function IndustryDashboardShell({ icon: Icon, title, description, slug, s
           </div>
         </>
       )}
-    </motion.div>
+    </div>
   );
 }

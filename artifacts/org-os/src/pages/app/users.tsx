@@ -186,7 +186,7 @@ export default function UsersPage() {
             <Input placeholder="Search team..." className="pl-8" value={search} onChange={e => setSearch(e.target.value)} />
           </div>
         </CardHeader>
-        <CardContent className="p-0">
+        <CardContent className="p-0 overflow-x-auto">
           {loading ? (
             <div className="p-4 space-y-3">
               {Array.from({ length: 5 }).map((_, i) => (
